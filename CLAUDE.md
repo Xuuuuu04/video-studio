@@ -55,7 +55,7 @@ cd presentation && npm run dev
 
 ### 素材引用
 
-`assets/logos/` 和 `assets/mascots/` 里的素材需要拷到视频项目的 `presentation/public/` 或 `presentation/src/assets/` 才能被 Vite 引用。
+`assets/up-brand/`（UP 主自己的猫猫 IP）和 `assets/vendor-logos/`（第三方 AI 厂商品牌）里的素材需要拷到视频项目的 `presentation/public/` 或 `presentation/src/assets/` 才能被 Vite 引用。
 
 ## UP 主风格校准
 
