@@ -244,27 +244,6 @@ npm run synthesize-audio       # mmx-cli 合成 mp3 到 public/audio/
 - 全自动：`localhost:5174/?auto=1`（SPACE 启动，自动播+推进）
 - 按 M 键切换模式
 
-## CI / 视频流水线（已弃用）
-
-2026-06 短暂试过 `.github/workflows/video-pipeline.yml` 自动跑
-Phase 1+2 → GitHub Pages，5 次 tag push（v0.1~v0.5-2026-06-19-test2）
-全部失败：
-
-1. 缺 `package-lock.json` → `npm ci` 拒跑
-2. `working-directory` 错位 → 找不到 article
-3. `MINIMAX_API_KEY` 配错（用户已修）
-4. reasoning 模型吐 `<think>` 块没正文 → 正则匹配失败
-5. LLM API `Connection error`（最关键）
-
-**根因**：纯 LLM API 路线没有 Claude Code 这种 harness，无法做
-"读完再写 / 错了重试 / 自检"的闭环。skill 的"硬节点等验收"靠
-Agent 的循环模型，pipeline 单次执行做不到。
-
-**当前方案**：手动开发，dev server 预览，git push 存代码。
-不再有 CI / Pages 部署。
-- workflow 文件、scripts、test2 占位目录、5 个 tag 全部已删
-- 若 GitHub 仍显示 Pages 站点残留：Settings → Pages → Source 选 "None"
-
 ## 关键约束
 
 - **改了 chapters.ts 或 narrations.ts 长度** → 必须 bump `useStepper.ts` 的 `STORAGE_KEY` 版本号
