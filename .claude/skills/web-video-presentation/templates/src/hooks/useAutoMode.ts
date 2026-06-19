@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import type { PlaybackMode } from "./useAudioPlayer";
 
 const ORDER: PlaybackMode[] = ["manual", "audio", "auto"];
@@ -45,22 +45,6 @@ export function useAutoMode() {
   const cycleMode = useCallback(() => {
     setMode(ORDER[(ORDER.indexOf(mode) + 1) % ORDER.length]!);
   }, [mode, setMode]);
-
-  // Keyboard: `M` cycles mode. `Space` starts auto if gated.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement) return;
-      if (e.key === "m" || e.key === "M") {
-        e.preventDefault();
-        cycleMode();
-      } else if (e.key === " " && mode === "auto" && !autoStarted) {
-        e.preventDefault();
-        setAutoStarted(true);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [mode, autoStarted, cycleMode]);
 
   return { mode, setMode, cycleMode, autoStarted, setAutoStarted };
 }

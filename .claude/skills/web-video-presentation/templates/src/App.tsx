@@ -10,18 +10,27 @@ import { ProgressBar } from "./components/ProgressBar";
 import { Stage } from "./components/Stage";
 import { useAudioPlayer } from "./hooks/useAudioPlayer";
 import { useAutoMode } from "./hooks/useAutoMode";
+import { useKeyboard } from "./hooks/useKeyboard";
 import { useStepper } from "./hooks/useStepper";
 import { CHAPTERS } from "./registry/chapters";
 
+// CJK Unified Ideographs + common fullwidth punctuation
+const CJK_RE = /[一-鿿㐀-䶿＀-￯]/g;
+
 /**
- * Estimate spoken duration of a Chinese narration string. Native pace
- * ≈ 4 char/s → 250ms per char. Used as Auto-mode fallback ONLY when the
- * audio file is missing / fails / the narration is empty. When audio plays
- * normally, this value is unused — auto-advance fires on `audio.ended`.
+ * Estimate spoken duration from narration text. Detects CJK vs Latin
+ * and picks the matching pace:
+ *   Chinese ≈ 4 char/s (250 ms/char)
+ *   English ≈ 150 wpm  (400 ms/word)
+ * Mixed text blends both proportionally.
  */
 function estimateMs(text: string): number {
   if (!text) return 1500;
-  return Math.max(1500, text.length * 250);
+  const cjkChars = (text.match(CJK_RE) || []).length;
+  const latinPart = text.replace(CJK_RE, " ").trim();
+  const latinWords = latinPart ? latinPart.split(/\s+/).length : 0;
+  const ms = cjkChars * 250 + latinWords * 400;
+  return Math.max(1500, ms);
 }
 
 export default function App() {
@@ -31,6 +40,15 @@ export default function App() {
   const stepText = ch.narrations[stepper.cursor.step] ?? "";
 
   const { mode, cycleMode, autoStarted, setAutoStarted } = useAutoMode();
+
+  useKeyboard({
+    stepper,
+    mode,
+    autoStarted,
+    cycleMode,
+    setAutoStarted,
+    chapters: CHAPTERS,
+  });
 
   // Audio path follows the convention: /audio/<chapter-id>/<step+1>.mp3
   // (1-indexed file names match what `extract-narrations.ts` outputs.)

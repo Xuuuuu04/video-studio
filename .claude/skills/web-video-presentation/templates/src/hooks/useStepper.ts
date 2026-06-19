@@ -136,29 +136,6 @@ export function useStepper(chapters: ChapterDef[]): StepperState {
     [chapters, totalGlobal],
   );
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement) return;
-      if (e.key === "ArrowRight" || e.key === " ") {
-        e.preventDefault();
-        next();
-      } else if (e.key === "ArrowLeft" || e.key === "Backspace") {
-        e.preventDefault();
-        prev();
-      } else if (e.key === "Home") {
-        jumpToChapter(0, 0);
-      } else if (e.key === "End") {
-        const last = chapters.length - 1;
-        jumpToChapter(last, chapters[last]!.narrations.length - 1);
-      } else if (e.key >= "1" && e.key <= "9") {
-        const n = Number(e.key) - 1;
-        if (n < chapters.length) jumpToChapter(n, 0);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [next, prev, jumpToChapter, chapters]);
-
   const ch = chapters[cursor.chapter]!;
   return {
     cursor,
