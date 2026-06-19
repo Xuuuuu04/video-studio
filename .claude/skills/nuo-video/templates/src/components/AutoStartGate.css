@@ -26,7 +26,7 @@
 }
 .auto-gate-kicker {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--t-min, 16px);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(244, 244, 245, 0.55);
@@ -47,7 +47,7 @@
 }
 .auto-gate-sub kbd {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: var(--t-min, 16px);
   background: rgba(255, 255, 255, 0.12);
   border-radius: 4px;
   padding: 2px 6px;

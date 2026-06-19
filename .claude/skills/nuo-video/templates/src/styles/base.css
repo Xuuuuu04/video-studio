@@ -16,6 +16,28 @@
  * in this file (.label-mono / .kicker / .corner-mark / .click-cue /
  * .scene-pad / .badge-mono / .pull-quote / .card / .masthead). They are
  * NOT a contract chapters must consume.
+ *
+ * ─────────────────────────────────────────────────────────────────────
+ * MIN FONT SIZE RULE  (system-wide, 16px floor)
+ * ─────────────────────────────────────────────────────────────────────
+ * The stage is fixed at 1920×1080, but viewers see it at much smaller
+ * scales: 1080p desktop = 56% scale, 720p mobile = 38% scale, plus
+ * video compression. Text that reads fine on stage can be illegible
+ * on a phone:
+ *
+ *   11px on stage → 4-6px on mobile   ✗ invisible
+ *   13px on stage → 5-7px on mobile   ✗ strain
+ *   16px on stage → 6-9px on mobile   ✓ minimum readable
+ *   20px+ on stage → 11px+ on mobile  ✓ comfortable
+ *
+ * Therefore:
+ *   • `--t-min: 16px` is the floor for the type scale
+ *   • All primitive classes (.label-mono / .kicker / .click-cue /
+ *     .badge-mono / .masthead .issue / etc.) source their size from
+ *     `--t-min`. Bump `--t-min` in one place to raise the floor.
+ *   • Chapters that write custom CSS SHOULD NOT go below 16px in any
+ *     text element on the stage. See CHAPTER-CRAFT.md → "可硬编码"
+ *     section for the rule chapters must follow.
  * ───────────────────────────────────────────────────────────────────── */
 
 /* ─── 0. Reset ─── */
@@ -51,7 +73,8 @@ body {
   --t-h1:          clamp(56px, 5vw, 88px);
   --t-h2:          clamp(40px, 3.6vw, 60px);
   --t-body:        20px;
-  --t-micro:       12px;
+  --t-micro:       var(--t-min);   /* micro tier = the min floor (16px) */
+  --t-min:         16px;           /* system-wide minimum font size */
 
   /* ── Tracking presets (used by primitive classes) ── */
   --track-tight:   -0.025em;   /* large serif display */
@@ -208,7 +231,7 @@ body {
 }
 .kicker {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: var(--t-min);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-mute);
@@ -307,7 +330,7 @@ body {
   align-items: center;
   gap: var(--space-3);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--t-min);
   letter-spacing: var(--track-caps);
   text-transform: uppercase;
   color: var(--text-mute);
@@ -338,7 +361,7 @@ body {
   border: var(--bw-1) solid var(--rule);
   border-radius: var(--r-pill);
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--t-min);
   letter-spacing: var(--track-caps);
   text-transform: uppercase;
   color: var(--text-mute);
@@ -395,7 +418,7 @@ body {
 .masthead .issue {
   margin-left: auto;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: var(--t-min);
   letter-spacing: var(--track-caps);
   text-transform: uppercase;
   color: var(--text-mute);
