@@ -1,0 +1,410 @@
+/* ─────────────────────────────────────────────────────────────────────
+ * 02-landscape — 厂商全景
+ *
+ * 章节 CSS 前缀：.ls-  （landscape）
+ * 颜色 / 字体全部走 token；hero-num / rule / card / stage-frame 走主题 primitive
+ *
+ * Step 0 国内 7 家：左侧大标题 + 右侧 4+3 logo 网格 stagger 入场
+ * Step 1 国外三大头：hero 三栏大字 + 副标 + accent 短句
+ * ───────────────────────────────────────────────────────────────────── */
+
+.ls-scene {
+  color: var(--text);
+  position: absolute;
+  inset: 0;
+}
+
+/* ───────── 共享：kicker / 大标题 / footer ───────── */
+
+.ls-kicker {
+  position: absolute;
+  top: var(--stage-pad-y);
+  left: var(--stage-pad-x);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ls-section-num {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--accent);
+}
+
+.ls-corner-mark {
+  position: absolute;
+  top: var(--stage-pad-y);
+  right: var(--stage-pad-x);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.ls-footnote {
+  position: absolute;
+  left: var(--stage-pad-x);
+  bottom: var(--stage-pad-y);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-mute);
+  opacity: 0;
+  animation: ls-fade-in 700ms var(--ease-quart) 1400ms forwards;
+}
+
+@keyframes ls-fade-in {
+  to { opacity: 0.7; }
+}
+
+/* ───────── Step 0：国内 7 家 ───────── */
+
+.ls-cn {
+  position: absolute;
+  inset: 0;
+  padding: calc(var(--stage-pad-y) + 88px) var(--stage-pad-x);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-7);
+  align-items: center;
+}
+
+/* 左：标题区 */
+.ls-cn-lead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 480px;
+}
+
+.ls-cn-h {
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  font-size: 80px;
+  line-height: 1.05;
+  letter-spacing: var(--track-tight);
+  color: var(--text);
+  margin: 0;
+  opacity: 0;
+  animation: ls-rise 900ms var(--ease-quart) 120ms forwards;
+}
+
+.ls-cn-h .em {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+.ls-cn-sub {
+  font-family: var(--font-body);
+  font-size: 22px;
+  line-height: 1.5;
+  color: var(--text-2);
+  margin: 0;
+  opacity: 0;
+  animation: ls-rise 900ms var(--ease-quart) 280ms forwards;
+}
+
+.ls-cn-stat {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  opacity: 0;
+  animation: ls-rise 900ms var(--ease-quart) 420ms forwards;
+}
+
+.ls-cn-stat-num {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 96px;
+  line-height: 0.85;
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+.ls-cn-stat-label {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+@keyframes ls-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 右：4 + 3 网格 */
+.ls-cn-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 18px;
+}
+
+/* 第二行第三格留空（4+3 排布） */
+.ls-cn-grid > .ls-vendor:nth-child(5) {
+  grid-column: 2 / span 1;
+}
+.ls-cn-grid > .ls-vendor:nth-child(6) {
+  grid-column: 3 / span 1;
+}
+.ls-cn-grid > .ls-vendor:nth-child(7) {
+  grid-column: 4 / span 1;
+}
+
+.ls-vendor {
+  background: var(--surface-2);
+  border: var(--bw-1) solid var(--rule);
+  border-radius: var(--r-card);
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: ls-vendor-in 800ms var(--ease-quart) forwards;
+}
+
+.ls-vendor:nth-child(1) { animation-delay: 520ms; }
+.ls-vendor:nth-child(2) { animation-delay: 620ms; }
+.ls-vendor:nth-child(3) { animation-delay: 720ms; }
+.ls-vendor:nth-child(4) { animation-delay: 820ms; }
+.ls-vendor:nth-child(5) { animation-delay: 940ms; }
+.ls-vendor:nth-child(6) { animation-delay: 1040ms; }
+.ls-vendor:nth-child(7) { animation-delay: 1140ms; }
+
+@keyframes ls-vendor-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 左侧 accent bar 高度生长 */
+.ls-vendor::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0;
+  background: var(--accent);
+  animation: ls-bar 700ms var(--ease-quart) forwards;
+}
+
+.ls-vendor:nth-child(1)::before { animation-delay: 640ms; }
+.ls-vendor:nth-child(2)::before { animation-delay: 740ms; }
+.ls-vendor:nth-child(3)::before { animation-delay: 840ms; }
+.ls-vendor:nth-child(4)::before { animation-delay: 940ms; }
+.ls-vendor:nth-child(5)::before { animation-delay: 1060ms; }
+.ls-vendor:nth-child(6)::before { animation-delay: 1160ms; }
+.ls-vendor:nth-child(7)::before { animation-delay: 1260ms; }
+
+@keyframes ls-bar {
+  to { height: 100%; }
+}
+
+.ls-vendor-logo {
+  height: 44px;
+  width: auto;
+  max-width: 110px;
+  object-fit: contain;
+  filter: brightness(0) invert(0.92); /* 让深色 logo 在暗底上反白 */
+  opacity: 0.92;
+  transition: opacity 400ms var(--ease-quart), filter 400ms var(--ease-quart);
+}
+
+.ls-vendor:hover .ls-vendor-logo {
+  opacity: 1;
+  filter: brightness(0) invert(1);
+}
+
+.ls-vendor-name {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text);
+  letter-spacing: 0;
+}
+
+.ls-vendor-tag {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+/* ───────── Step 1：国外三大头（hero 三栏） ───────── */
+
+.ls-intl {
+  position: absolute;
+  inset: 0;
+  padding: var(--stage-pad-y) var(--stage-pad-x);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-7);
+}
+
+.ls-intl-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 1100px;
+}
+
+.ls-intl-h {
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 1.1;
+  letter-spacing: var(--track-tight);
+  color: var(--text);
+  margin: 0;
+  opacity: 0;
+  animation: ls-rise 900ms var(--ease-quart) 120ms forwards;
+}
+
+.ls-intl-h .em {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+.ls-intl-sub {
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--text-2);
+  margin: 0;
+  max-width: 48ch;
+  opacity: 0;
+  animation: ls-rise 900ms var(--ease-quart) 280ms forwards;
+}
+
+/* hero 三栏 */
+.ls-intl-trio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-7);
+  margin-top: var(--space-5);
+}
+
+.ls-major {
+  background: var(--surface-2);
+  border: var(--bw-1) solid var(--rule);
+  border-radius: var(--r-card);
+  padding: 44px 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-32px);
+  animation: ls-major-in 1000ms var(--ease-quart) forwards;
+}
+
+.ls-major:nth-child(1) { animation-delay: 480ms; }
+.ls-major:nth-child(2) { animation-delay: 640ms; }
+.ls-major:nth-child(3) { animation-delay: 800ms; }
+
+@keyframes ls-major-in {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* accent 顶边条 */
+.ls-major::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: var(--accent);
+  animation: ls-bar-x 800ms var(--ease-quart) forwards;
+}
+
+.ls-major:nth-child(1)::after { animation-delay: 620ms; }
+.ls-major:nth-child(2)::after { animation-delay: 780ms; }
+.ls-major:nth-child(3)::after { animation-delay: 940ms; }
+
+@keyframes ls-bar-x {
+  to { width: 100%; }
+}
+
+.ls-major-ord {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 64px;
+  line-height: 0.9;
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+.ls-major-logo {
+  height: 48px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+  filter: brightness(0) invert(0.92);
+  opacity: 0.92;
+}
+
+.ls-major-name {
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 1.1;
+  letter-spacing: var(--track-tight);
+  color: var(--text);
+  margin: 0;
+}
+
+.ls-major-tag {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.ls-major-note {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--text-2);
+  margin: 0;
+  margin-top: auto;
+}
+
+/* footer 在 step 1 末尾晚一点出现 */
+.ls-intl .ls-footnote {
+  animation-delay: 1300ms;
+}

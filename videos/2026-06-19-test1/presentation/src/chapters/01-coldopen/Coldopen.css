@@ -1,0 +1,251 @@
+/* ─────────────────────────────────────────────────────────────────────
+ * 01-coldopen — 反差钩子 + 邀请 + 话题预览
+ *
+ * 章节 CSS 前缀：.cd-  （cold-open 的缩写，避免跨章冲突）
+ * 颜色 / 字体全部走 token；hero-num / rule / card / stage-frame 走主题 primitive
+ * ───────────────────────────────────────────────────────────────────── */
+
+.cd-scene {
+  color: var(--text);
+  position: absolute;
+  inset: 0;
+}
+
+/* ── step 0: 反差钩子 ── */
+.cd-hook {
+  position: absolute;
+  inset: 0;
+  padding: var(--stage-pad-y) var(--stage-pad-x);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-7);
+}
+
+.cd-kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.cd-hook-question {
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  font-size: 72px;
+  line-height: 1.05;
+  letter-spacing: var(--track-tight);
+  color: var(--text);
+  max-width: 22ch;
+  margin: 0;
+}
+
+.cd-hook-sub {
+  font-family: var(--font-body);
+  font-size: 26px;
+  line-height: 1.4;
+  color: var(--text-2);
+  margin: 0;
+  max-width: 32ch;
+}
+
+/* 反差对比行：左灰 → 右 accent */
+.cd-contrast {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-7);
+  margin-top: var(--space-5);
+}
+
+.cd-contrast-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.cd-contrast-cell.is-target {
+  align-items: flex-start;
+}
+
+.cd-contrast-era {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+.cd-contrast-text {
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 1;
+  letter-spacing: var(--track-tight);
+}
+
+.cd-contrast-cell.is-past .cd-contrast-text {
+  color: var(--text-faint);
+}
+
+.cd-contrast-cell.is-now .cd-contrast-text {
+  color: var(--accent);
+  text-shadow: 0 0 32px var(--accent-glow);
+}
+
+/* 中间箭头：SVG 自绘 */
+.cd-arrow {
+  width: 80px;
+  height: 80px;
+  color: var(--text-mute);
+  flex-shrink: 0;
+}
+
+.cd-arrow-line {
+  stroke: var(--text-mute);
+  stroke-width: 2;
+  stroke-dasharray: 4 6;
+  stroke-dashoffset: 0;
+  animation: cd-dash 2.4s linear infinite;
+}
+
+.cd-arrow-head {
+  fill: var(--text-mute);
+}
+
+@keyframes cd-dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+/* ── step 1: 邀请 + 话题预览 ── */
+.cd-invite {
+  position: absolute;
+  inset: 0;
+  padding: var(--stage-pad-y) var(--stage-pad-x);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-7);
+}
+
+.cd-invite-lead {
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  font-size: 56px;
+  line-height: 1.15;
+  letter-spacing: var(--track-tight);
+  color: var(--text);
+  margin: 0;
+  max-width: 18ch;
+}
+
+.cd-invite-sub {
+  font-family: var(--font-body);
+  font-size: 22px;
+  line-height: 1.5;
+  color: var(--text-2);
+  margin: 0;
+  max-width: 48ch;
+}
+
+/* 三话题列表：stagger 入场（视觉演示） */
+.cd-topics {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-5);
+  margin-top: var(--space-5);
+}
+
+.cd-topic {
+  flex: 1;
+  background: var(--surface-2);
+  border: var(--bw-1) solid var(--rule);
+  border-radius: var(--r-card);
+  padding: var(--space-5) var(--space-5) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: cd-topic-in 700ms var(--ease-quart) forwards;
+}
+
+.cd-topic:nth-child(1) { animation-delay: 200ms; }
+.cd-topic:nth-child(2) { animation-delay: 420ms; }
+.cd-topic:nth-child(3) { animation-delay: 640ms; }
+
+.cd-topic::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0;
+  background: var(--accent);
+  animation: cd-topic-bar 800ms var(--ease-quart) forwards;
+}
+
+.cd-topic:nth-child(1)::before { animation-delay: 320ms; }
+.cd-topic:nth-child(2)::before { animation-delay: 540ms; }
+.cd-topic:nth-child(3)::before { animation-delay: 760ms; }
+
+@keyframes cd-topic-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cd-topic-bar {
+  to {
+    height: 100%;
+  }
+}
+
+.cd-topic-num {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-size: 28px;
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+.cd-topic-title {
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.cd-topic-note {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+/* 底部节奏暗示 */
+.cd-cue {
+  position: absolute;
+  left: var(--stage-pad-x);
+  bottom: var(--stage-pad-y);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--text-mute);
+  opacity: 0;
+  animation: cd-cue-in 700ms var(--ease-quart) 900ms forwards;
+}
+
+@keyframes cd-cue-in {
+  to { opacity: 0.7; }
+}
