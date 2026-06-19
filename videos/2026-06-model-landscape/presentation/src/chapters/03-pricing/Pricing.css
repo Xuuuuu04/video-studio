@@ -174,7 +174,7 @@
 .pr-sub-page {
   position: absolute;
   inset: 0;
-  padding: 52px 72px 40px;
+  padding: 44px 56px 32px;
   display: flex;
   flex-direction: column;
 }
@@ -184,15 +184,17 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 14px;
+  gap: 12px;
   overflow: hidden;
 }
 
 .pr-sub-card {
   border: 1px solid var(--rule);
-  border-left: 3px solid var(--sub-color, var(--accent));
+  border-left: 4px solid var(--sub-color, var(--accent));
   background: var(--surface-2);
-  padding: 14px 18px;
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
   opacity: 0;
   transform: translateY(10px);
   animation: pr-row-in 500ms var(--ease-quart) forwards;
@@ -202,49 +204,52 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
-  padding-bottom: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
   border-bottom: 1px solid var(--rule);
+  flex-shrink: 0;
 }
 
 .pr-sub-card-logo {
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   object-fit: contain;
 }
 
 .pr-sub-card-vendor {
   font-family: var(--font-display-cn);
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 700;
   color: var(--text);
 }
 
 .pr-sub-card-plans {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  justify-content: center;
+  gap: 6px;
 }
 
 .pr-sub-plan-row {
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: 12px;
 }
 
 .pr-sub-plan-name {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 17px;
   color: var(--text-mute);
-  min-width: 80px;
+  min-width: 90px;
 }
 
 .pr-sub-plan-price {
   font-family: var(--font-mono);
-  font-size: 18px;
+  font-size: 26px;
   font-weight: 700;
   color: var(--text);
-  min-width: 70px;
+  min-width: 80px;
 }
 
 .pr-sub-plan--free .pr-sub-plan-price {
@@ -255,13 +260,13 @@
 
 .pr-sub-plan-quota {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 17px;
   color: var(--text-2);
 }
 
 .pr-sub-plan-note {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-faint);
   font-style: italic;
 }

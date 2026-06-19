@@ -31,7 +31,7 @@ function StepDaily({ step }: ChapterStepProps) {
       logo: "kimi.png",
       color: BRAND.kimi,
       reason: "中文体感好，MCP 工具调用能力强，适合知识整理和多轮对话",
-      metrics: [{ label: "128K 上下文", val: "" }, { label: "MCP 生态", val: "领先" }],
+      metrics: [{ label: "256K 上下文", val: "" }, { label: "MCP 生态", val: "领先" }],
     },
     {
       name: "豆包",
@@ -275,7 +275,7 @@ const VENDORS: VendorSummary[] = [
     logo: "kimi.png",
     color: BRAND.kimi,
     strengths: ["MCP 工具调用强", "Claw Agent 好用"],
-    weakness: "API 128K 上下文偏小",
+    weakness: "API 256K 上下文偏小",
   },
   {
     name: "通义千问",

@@ -85,7 +85,7 @@ const OVERSEAS: ApiRow[] = [
 
 const DOMESTIC: ApiRow[] = [
   { model: "GLM-5.2", logo: "glm.png", input: "$1.40", output: "$4.40", cache: "$0.26", ctx: "1M", color: CLR.glm },
-  { model: "Kimi K2.7", logo: "kimi.png", input: "$0.95", output: "$4.00", cache: "$0.19", ctx: "128K", color: CLR.kimi },
+  { model: "Kimi K2.7", logo: "kimi.png", input: "$0.95", output: "$4.00", cache: "$0.19", ctx: "256K", color: CLR.kimi },
   { model: "Qwen3.7 Max", logo: "Qwen.png", input: "$1.25", output: "$3.75", cache: "—", ctx: "1M", color: CLR.qwen },
   { model: "Doubao Seed 2.0 Pro", logo: "doubao.png", input: "$0.47", output: "$2.37", cache: "—", ctx: "128K", color: CLR.doubao },
   { model: "Qwen3.6 Plus", logo: "Qwen.png", input: "$0.325", output: "$1.95", cache: "—", ctx: "1M", color: CLR.qwen },
@@ -411,8 +411,8 @@ export default function Pricing({ step }: ChapterStepProps) {
     return (
       <div className="scene" key={step}>
         <div className="pr-sub-page">
-          <h2 className="pr-section-title">订阅 / Token Plan / Coding Plan</h2>
-          <p className="pr-chapter-sub">Subscription Plans &middot; Monthly</p>
+          <h2 className="pr-section-title" style={{ fontSize: 40, marginBottom: 2 }}>订阅 / Token Plan / Coding Plan</h2>
+          <p className="pr-chapter-sub" style={{ marginBottom: 12 }}>Subscription Plans &middot; Monthly</p>
           <SubGrid />
         </div>
       </div>
