@@ -62,6 +62,10 @@ const systemPrompt = `你是一个视频生产流水线的 AI 助手，结合了
 【角色 1: draft-organizer】把用户给的文章转成 B 站风格口播稿。严格按 SCRIPT-STYLE 规则。
 【角色 2: visual-designer】把口播稿拆成可录屏的演示章节（章节切分 + step 数 + 信息池）。严格按 OUTLINE-FORMAT 规则。
 
+【硬规则 · reasoning 模型专属】不要使用 <think>、<reasoning> 或任何"先想再答"的推理块。
+不要"让我先分析一下……"、不要自言自语、不要解释你在做什么。
+直接、立即、按以下格式输出正文，从第一个 ========== 开始。
+
 【输出格式】严格遵守。用以下分隔符包裹两部分（=== 等号 ≥ 8 个，避免与正文冲突）：
 ==========SCRIPT_BEGIN==========
 <script.md 完整内容，纯 markdown>
@@ -119,25 +123,31 @@ if (!content) {
   process.exit(1);
 }
 
-const scriptMatch = content.match(
+// Reasoning models (MiniMax-M3 等) 会在正文前吐 <think>...</think> 推理块。
+// 剥掉它们再用正则匹配正文分隔符；剥完仍匹配不到说明 token 不够或格式完全不对。
+const cleaned = content.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+
+const scriptMatch = cleaned.match(
   /==========SCRIPT_BEGIN==========\s*([\s\S]*?)\s*==========SCRIPT_END==========/
 );
-const outlineMatch = content.match(
+const outlineMatch = cleaned.match(
   /==========OUTLINE_BEGIN==========\s*([\s\S]*?)\s*==========OUTLINE_END==========/
 );
 
 if (!scriptMatch) {
   console.error('ERROR: could not find SCRIPT delimiters in response');
-  console.error('--- raw content ---');
-  console.error(content);
+  console.error('--- raw content (after stripping <think>) ---');
+  console.error(cleaned.slice(0, 2000));
   console.error('--- end raw content ---');
+  console.error(`(total cleaned length: ${cleaned.length} chars; original: ${content.length})`);
   process.exit(1);
 }
 if (!outlineMatch) {
   console.error('ERROR: could not find OUTLINE delimiters in response');
-  console.error('--- raw content ---');
-  console.error(content);
+  console.error('--- raw content (after stripping <think>) ---');
+  console.error(cleaned.slice(0, 2000));
   console.error('--- end raw content ---');
+  console.error(`(total cleaned length: ${cleaned.length} chars; original: ${content.length})`);
   process.exit(1);
 }
 
