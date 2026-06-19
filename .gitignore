@@ -1,0 +1,22 @@
+# Claude Code / OpenCode 本地配置（但 skills 要入库）
+.claude/*
+!.claude/skills/
+.opencode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node（每个视频项目的依赖和构建产物）
+node_modules/
+dist/
+*.tsbuildinfo
+
+# 音频合成产物（太大，不入库）
+**/public/audio/
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
