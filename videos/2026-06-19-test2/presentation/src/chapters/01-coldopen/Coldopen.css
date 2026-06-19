@@ -1,0 +1,553 @@
+/* ─────────────────────────────────────────────────────────────────────
+ * 01 · Coldopen — 大模型为什么说不出马嘉祺
+ *   Single chapter CSS file. Class prefix: .cd- (coldopen).
+ *   All colors / fonts → token. Sizes / spacing free per chapter need.
+ * ───────────────────────────────────────────────────────────────────── */
+
+.cd-scene {
+  position: absolute;
+  inset: 0;
+  padding: var(--stage-pad-y) var(--stage-pad-x);
+}
+
+.cd-step {
+  position: absolute;
+  inset: var(--stage-pad-y) var(--stage-pad-x);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.cd-step-center {
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+.cd-step-tight {
+  justify-content: center;
+}
+
+/* ── shared corner / masthead chrome ─────────────────────────────── */
+
+.cd-corner {
+  position: absolute;
+  top: calc(var(--stage-pad-y) - 24px);
+  left: 0;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-mute);
+}
+.cd-corner-num {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-size: 28px;
+  color: var(--accent);
+  line-height: 1;
+}
+.cd-corner-slash {
+  opacity: 0.4;
+  font-size: 18px;
+}
+.cd-corner-label {
+  font-size: var(--t-min);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ── step 0 · hero "马璟祺" ──────────────────────────────────────── */
+
+.cd-s0-block {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  align-items: center;
+  justify-items: center;
+  gap: 56px;
+  margin-top: 40px;
+}
+
+.cd-s0-original {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  font-size: 96px;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+  opacity: 0;
+  animation: cd-fade-up var(--dur-slow) var(--ease-quart) 100ms forwards;
+}
+.cd-s0-asked { padding: 0 8px; }
+.cd-s0-strike {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 4px;
+  background: var(--text-faint);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: cd-strike-grow 500ms var(--ease-expo) 700ms forwards;
+}
+
+.cd-s0-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  animation: cd-fade 500ms var(--ease-quart) 1100ms forwards;
+}
+.cd-s0-arrow-line {
+  width: 2px;
+  height: 36px;
+  background: var(--accent);
+}
+.cd-s0-arrow-tip {
+  font-size: 18px;
+  color: var(--accent);
+  line-height: 1;
+  transform: translateY(-4px);
+}
+
+.cd-s0-reply {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 24px;
+  opacity: 0;
+  transform: scale(0.92);
+  animation:
+    cd-pop 600ms var(--ease-overshoot) 1400ms forwards,
+    cd-flicker 6000ms 2200ms infinite;
+}
+.cd-s0-reply-mark {
+  font-family: var(--font-mono);
+  font-size: var(--t-min);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  align-self: center;
+  padding: 6px 10px;
+  border: 1px solid var(--accent);
+  border-radius: var(--r-xs);
+}
+.cd-s0-reply-text {
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  font-size: 220px;
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+  color: var(--accent);
+  text-shadow: 0 0 60px var(--accent-glow);
+}
+
+.cd-s0-hint {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: var(--t-min);
+  color: var(--text-mute);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  opacity: 0;
+  animation: cd-fade 500ms var(--ease-quart) 2200ms forwards;
+}
+
+@keyframes cd-strike-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes cd-pop {
+  0%   { opacity: 0; transform: scale(0.85); }
+  60%  { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes cd-flicker {
+  0%, 92%, 100% { opacity: 1; }
+  94%           { opacity: 0.6; }
+  96%           { opacity: 1; }
+  98%           { opacity: 0.85; }
+}
+@keyframes cd-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes cd-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── step 1 · 报告揭幕 ──────────────────────────────────────────── */
+
+.cd-masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 18px;
+}
+.cd-masthead-cat {
+  font-family: var(--font-mono);
+  font-size: var(--t-min);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.cd-masthead-source {
+  font-family: var(--font-mono);
+  font-size: var(--t-min);
+  color: var(--text-mute);
+  letter-spacing: 0.04em;
+  margin-left: 16px;
+}
+.cd-masthead-vol {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-size: 28px;
+  color: var(--text);
+}
+
+.cd-rule { margin: 0 0 56px; }
+.cd-rule.rule-grow { transform-origin: left; }
+
+.cd-s1-titlewrap {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 1500px;
+}
+
+.cd-s1-title {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  letter-spacing: var(--track-tight);
+  line-height: 1.1;
+}
+.cd-s1-title-pre {
+  font-size: 44px;
+  color: var(--text-mute);
+  opacity: 0;
+  animation: cd-fade-up var(--dur-slow) var(--ease-quart) 200ms forwards;
+}
+.cd-s1-title-main {
+  font-size: 104px;
+  color: var(--text);
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  opacity: 0;
+  animation: cd-fade-up var(--dur-slow) var(--ease-quart) 600ms forwards;
+}
+.cd-s1-title-main::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.08em;
+  height: 4px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: cd-strike-grow 700ms var(--ease-expo) 1300ms forwards;
+}
+
+.cd-s1-sub {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 28px;
+  line-height: 1.5;
+  color: var(--text-2);
+  max-width: 900px;
+  opacity: 0;
+  animation: cd-fade-up var(--dur-slow) var(--ease-quart) 1100ms forwards;
+}
+
+/* ── step 2 · 价值定调 ──────────────────────────────────────────── */
+
+.cd-s2-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-min);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 64px;
+  opacity: 0;
+  animation: cd-fade var(--dur-base) var(--ease-quart) 200ms forwards;
+}
+
+.cd-s2-duo {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  margin-bottom: 64px;
+}
+
+.cd-s2-row {
+  display: flex;
+  align-items: baseline;
+  gap: 32px;
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  line-height: 1.1;
+}
+.cd-s2-row-1 { opacity: 0; animation: cd-fade-up var(--dur-slow) var(--ease-quart) 500ms forwards; }
+.cd-s2-row-2 { opacity: 0; animation: cd-fade-up var(--dur-slow) var(--ease-quart) 1100ms forwards; }
+
+.cd-s2-no {
+  font-family: var(--font-mono);
+  font-size: 36px;
+  font-weight: 500;
+  color: var(--text-faint);
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+  min-width: 120px;
+}
+.cd-s2-no-em { color: var(--accent); }
+.cd-s2-line {
+  font-size: 64px;
+  color: var(--text-mute);
+}
+.cd-s2-line-em {
+  color: var(--text);
+  position: relative;
+  padding-bottom: 8px;
+}
+.cd-s2-line-em::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: cd-strike-grow 700ms var(--ease-expo) 1800ms forwards;
+}
+
+.cd-s2-rail {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  animation: cd-fade var(--dur-base) var(--ease-quart) 2400ms forwards;
+}
+.cd-s2-rail::before {
+  content: "";
+  width: 60px;
+  height: 1px;
+  background: var(--rule);
+}
+.cd-s2-rail-tag {
+  font-family: var(--font-mono);
+  font-size: var(--t-min);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ── step 3 · 路线图 ────────────────────────────────────────────── */
+
+.cd-s3-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-min);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 18px;
+  opacity: 0;
+  animation: cd-fade var(--dur-base) var(--ease-quart) 100ms forwards;
+}
+
+.cd-s3-h {
+  margin: 0 0 80px;
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  font-size: 60px;
+  letter-spacing: var(--track-tight);
+  line-height: 1.1;
+  color: var(--text);
+  opacity: 0;
+  animation: cd-fade-up var(--dur-slow) var(--ease-quart) 300ms forwards;
+}
+
+.cd-s3-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  margin-top: 90px;
+  height: 2px;
+  background: var(--rule);
+  z-index: 0;
+}
+.cd-s3-line {
+  height: 100%;
+  background: var(--accent);
+  width: 0;
+  animation: cd-line-grow 1400ms var(--ease-expo) 700ms forwards;
+}
+@keyframes cd-line-grow {
+  to { width: 100%; }
+}
+
+.cd-s3-nodes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 48px;
+  z-index: 1;
+}
+
+.cd-s3-node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: 32px 24px;
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-card);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: cd-fade-up var(--dur-slow) var(--ease-quart) forwards;
+}
+.cd-s3-node:nth-child(1) { animation-delay: 800ms; }
+.cd-s3-node:nth-child(2) { animation-delay: 1100ms; }
+.cd-s3-node:nth-child(3) { animation-delay: 1400ms; }
+.cd-s3-node:nth-child(4) { animation-delay: 1700ms; }
+.cd-s3-node:nth-child(1)::after,
+.cd-s3-node:nth-child(2)::after,
+.cd-s3-node:nth-child(3)::after {
+  content: "";
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 16px var(--accent-glow);
+}
+
+.cd-s3-num {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-size: 36px;
+  color: var(--accent);
+  line-height: 1;
+}
+.cd-s3-name {
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  font-size: 30px;
+  color: var(--text);
+  letter-spacing: var(--track-snug);
+}
+.cd-s3-sub {
+  font-family: var(--font-body);
+  font-size: 18px;
+  color: var(--text-mute);
+  line-height: 1.4;
+}
+
+/* ── step 4 · 章标 ──────────────────────────────────────────────── */
+
+.cd-s4-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-min);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: cd-fade var(--dur-base) var(--ease-quart) 200ms forwards;
+}
+
+.cd-s4-h {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  animation: cd-fade-up var(--dur-slow) var(--ease-quart) 500ms forwards;
+}
+.cd-s4-cn {
+  font-family: var(--font-display-cn);
+  font-weight: 700;
+  font-size: 180px;
+  color: var(--text);
+  letter-spacing: var(--track-tight);
+  line-height: 0.9;
+}
+.cd-s4-en {
+  font-family: var(--font-display-en);
+  font-style: italic;
+  font-size: 60px;
+  color: var(--accent);
+}
+
+.cd-s4-rule {
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  margin: 36px 0 28px;
+  animation: cd-rule-grow 700ms var(--ease-expo) 1200ms forwards;
+}
+@keyframes cd-rule-grow {
+  to { width: 240px; }
+}
+
+.cd-s4-sub {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--text-2);
+  max-width: 720px;
+  line-height: 1.4;
+  opacity: 0;
+  animation: cd-fade var(--dur-base) var(--ease-quart) 1500ms forwards;
+}
+
+/* ── step 5 · 过场 ──────────────────────────────────────────────── */
+
+.cd-s5-cursor {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  opacity: 0;
+  animation: cd-fade 500ms var(--ease-quart) 200ms forwards;
+}
+.cd-s5-cursor-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 18px var(--accent-glow);
+  animation: cd-blink 1.2s var(--ease-soft) infinite;
+}
+.cd-s5-cursor-text {
+  font-family: var(--font-mono);
+  font-size: var(--t-min);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+@keyframes cd-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.25; }
+}

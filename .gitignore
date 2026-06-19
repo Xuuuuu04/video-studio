@@ -4,6 +4,12 @@
 !.claude/agents/
 .opencode/
 
+# Playwright MCP 产物
+.playwright-mcp/
+
+# 根目录临时截图（playwright 调试用，不入版本）
+/*.png
+
 # OS
 .DS_Store
 Thumbs.db
