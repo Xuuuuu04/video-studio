@@ -244,76 +244,26 @@ npm run synthesize-audio       # mmx-cli 合成 mp3 到 public/audio/
 - 全自动：`localhost:5174/?auto=1`（SPACE 启动，自动播+推进）
 - 按 M 键切换模式
 
-## CI / 视频流水线
+## CI / 视频流水线（已弃用）
 
-`.github/workflows/video-pipeline.yml` 自动把 `videos/<slug>/article.md`
-转成 script + outline，scaffold 出 presentation 项目，部署到 GitHub Pages。
+2026-06 短暂试过 `.github/workflows/video-pipeline.yml` 自动跑
+Phase 1+2 → GitHub Pages，5 次 tag push（v0.1~v0.5-2026-06-19-test2）
+全部失败：
 
-### 触发规则（必读）
+1. 缺 `package-lock.json` → `npm ci` 拒跑
+2. `working-directory` 错位 → 找不到 article
+3. `MINIMAX_API_KEY` 配错（用户已修）
+4. reasoning 模型吐 `<think>` 块没正文 → 正则匹配失败
+5. LLM API `Connection error`（最关键）
 
-**只有 `v*` tag 推送或手动 dispatch 才会触发**。普通 `git push` 到 main
-**完全不会触发**本 workflow：
+**根因**：纯 LLM API 路线没有 Claude Code 这种 harness，无法做
+"读完再写 / 错了重试 / 自检"的闭环。skill 的"硬节点等验收"靠
+Agent 的循环模型，pipeline 单次执行做不到。
 
-- 不会跑任何 job
-- 不会去找 `article.md`
-- 不会报错
-- 不会消耗 GitHub Actions minutes
-- 不会扣 LLM API 配额
-
-| Git 操作 | 触发 CI？ | 扣 API？ | 何时用 |
-|---|---|---|---|
-| `git push`（普通 commit） | ❌ | ❌ | **默认**——保存代码就这个 |
-| `git tag v* && git push --tags` | ✅ | ✅ | 想跑一次 pipeline |
-| Actions 页面 → Run workflow | ✅ | ✅ | 不打 tag、想手动触发 |
-
-→ **只想保存代码** → `git push`，CI 不响应、零成本
-→ **想跑 pipeline** → 必须 `git tag v<version>-<slug> && git push --tags`
-→ 规则出处：参见 `2874b85` commit 与 `.github/workflows/video-pipeline.yml`
-头部注释（历史来源）；**当前权威规则见本节**
-
-### Tag 格式
-
-```
-v<version>-<slug>
-```
-
-- `<version>`：任意版本号（如 `1.0`、`0.1`、`2024.06`）
-- `<slug>`：必须匹配 `videos/` 下的目录名
-- 例：`v1.0-speed-test` → 找 `videos/speed-test/article.md`
-- 例：`v0.1-2026-06-19-test1` → 找 `videos/2026-06-19-test1/article.md`
-
-### 流水线 3 步
-
-| Job | 干什么 | 产物 |
-|---|---|---|
-| `generate` | 调 MiniMax M3（OpenAI 兼容协议），跑 draft-organizer + visual-designer 合并 prompt | `videos/<slug>/script.md` + `outline.md`（commit 回仓） |
-| `build` | `scaffold.sh` 搭脚手架 → 补 Vite base path → `npm run build` | `videos/<slug>/presentation/dist/` |
-| `deploy` | `actions/deploy-pages@v4` 部署 | URL = `https://<owner>.github.io/<repo>/videos/<slug>/` |
-
-**仅覆盖 Phase 1+2**（口播稿 + 章节计划 + 脚手架），不做每章视觉实现。
-URL 上看的是脚手架 + 自带 demo chapter + AI 生成的 script/outline。
-
-### 一次性配置（每个新仓库只做一次）
-
-1. **Settings → Secrets and variables → Actions → New repository secret**
-   - Name: `MINIMAX_API_KEY`
-   - Value: 你的 MiniMax API key（**绝不**写进任何文件 / commit / issue）
-2. **Settings → Pages → Build and deployment**
-   - Source: 选 **"GitHub Actions"**（不是 "Deploy from a branch"）
-3. **（可选）Settings → Variables → Actions**
-   - `MINIMAX_BASE_URL`（默认 `https://api.MiniMax.chat/v1`）
-   - `MINIMAX_MODEL`（默认 `MiniMax-M3`）
-4. **仓库可见性**
-   - 私有仓 + 免费 Plan → Pages 不工作，必须改 public 或升级
-   - 公开仓 → 任何 Plan 都能用
-
-### 故障排查
-
-- tag push 了但 Actions 没跑 → tag 必须以 `v` 开头（已配 `tags: ['v*']`）
-- generate job 报 401/403 → API key 没设对，去 Settings → Secrets 查
-- deploy job 报 403 → Pages 没选 "GitHub Actions" source，或 workflow 的
-  `permissions: pages: write / id-token: write` 被改坏了
-- 第一次跑就超时 → API 调慢或网络问题，看 Actions 日志贴出来分析
+**当前方案**：手动开发，dev server 预览，git push 存代码。
+不再有 CI / Pages 部署。
+- workflow 文件、scripts、test2 占位目录、5 个 tag 全部已删
+- 若 GitHub 仍显示 Pages 站点残留：Settings → Pages → Source 选 "None"
 
 ## 关键约束
 

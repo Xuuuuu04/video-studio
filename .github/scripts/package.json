@@ -1,9 +1,0 @@
-{
-  "name": "video-pipeline-scripts",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Internal scripts for the video-pipeline GitHub Action. Not published.",
-  "dependencies": {
-    "openai": "^4.77.0"
-  }
-}
