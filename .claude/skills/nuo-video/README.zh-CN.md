@@ -1,16 +1,16 @@
-# Web Video Presentation Skill
+# Nuo Video Skill
 
 **把文章或口播稿做成点击驱动的 16:9 网页演示，并通过录屏产出有电影感视频的 Agent Skill。**
 
 [English](./README.md) · [返回集合首页](../../README.zh-CN.md)
 
-![Web Video Presentation Skill](../../dist/imgs/web-video-presentation-skill.png)
+![Web Video Presentation Skill](../../dist/imgs/nuo-video-skill.png)
 
 ---
 
 ## 这是什么？
 
-`web-video-presentation` 帮 Agent 构建一种 Vite + React + TypeScript 演示：它看起来不是传统幻灯片，而更像为录屏设计的视频舞台。每次点击推进一个口播节拍，每一步独占 1920×1080 舞台，进度 UI 平时隐藏，只有悬浮时出现，方便录出干净画面。
+`nuo-video` 帮 Agent 构建一种 Vite + React + TypeScript 演示：它看起来不是传统幻灯片，而更像为录屏设计的视频舞台。每次点击推进一个口播节拍，每一步独占 1920×1080 舞台，进度 UI 平时隐藏，只有悬浮时出现，方便录出干净画面。
 
 它适合：
 
@@ -64,7 +64,7 @@ Phase 4    录屏与后期
 ## 内含内容
 
 ```text
-.claude/skills/web-video-presentation/
+.claude/skills/nuo-video/
 ├── SKILL.md
 ├── README.md / README.zh-CN.md
 ├── references/
@@ -98,13 +98,13 @@ Phase 4    录屏与后期
 如果要手动脚手架：
 
 ```bash
-bash .claude/skills/web-video-presentation/scripts/scaffold.sh ./presentation --theme=paper-press
+bash .claude/skills/nuo-video/scripts/scaffold.sh ./presentation --theme=paper-press
 ```
 
 查看可用主题：
 
 ```bash
-bash .claude/skills/web-video-presentation/scripts/scaffold.sh --list-themes
+bash .claude/skills/nuo-video/scripts/scaffold.sh --list-themes
 ```
 
 生成的 `presentation/` 是普通 Vite + React + TypeScript 项目。启动后用录屏工具录制 16:9 舞台即可。

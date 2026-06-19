@@ -6,37 +6,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 B 站 UP 主 **圣徒城的小诺**（UID 150452545）的视频快速生产仓库。流程：用户录入讲解内容和节奏 → agent 调研补全 → 按讲解逻辑设计每页内容（注意信息密度、图表呈现） → 基于内置 Skill 模板开发视觉动效。
 
-核心 Skill 在 `.claude/skills/web-video-presentation/`——把文章/口播稿变成点击驱动的 16:9 网页演示（Vite + React + TypeScript），通过录屏产出视频。不是传统幻灯片——更像为录屏设计的视频舞台。
+核心 Skill 在 `.claude/skills/nuo-video/`——把文章/口播稿变成点击驱动的 16:9 网页演示（Vite + React + TypeScript），通过录屏产出视频。不是传统幻灯片——更像为录屏设计的视频舞台。
 
 ## 仓库结构
 
 ```
 video-studio/
-├── CLAUDE.md                 # 本文件
-├── .claude/skills/           # Agent Skill（模板 + 方法论，不随视频变）
-│   └── web-video-presentation/
-├── resources/                # 全局共享素材（LOGO、视觉锚点等）
-│   ├── 大模型相关LOGO/
-│   └── 视觉锚点/
-└── videos/                   # 每个视频一个子目录
-    ├── 2026-03-coding-god/   # 命名：YYYY-MM-<slug>
-    │   ├── article.md        # 原始文章（如有）
-    │   ├── script.md         # 口播稿
-    │   ├── outline.md        # 开发计划
-    │   └── presentation/     # scaffold 产出的 Vite 项目
-    └── 2026-04-speed-test/
-        └── ...
+├── CLAUDE.md
+├── .claude/skills/nuo-video/     # Agent Skill（模板 + 方法论）
+│   ├── SKILL.md                  # Skill 主入口
+│   ├── assets/                   # 全局共享素材
+│   │   ├── logos/                # 大模型厂商 LOGO
+│   │   └── mascots/              # 频道吉祥物（小黑猫系列）
+│   ├── references/               # 各阶段参考文档
+│   ├── scripts/                  # 脚手架脚本
+│   ├── templates/                # Vite + React + TS 模板
+│   └── themes/                   # 10 套内置主题
+└── videos/                       # 每个视频一个子目录
+    └── <YYYY-MM>-<slug>/         # 如 2026-06-speed-test/
+        ├── article.md            # 原始文章（如有）
+        ├── script.md             # 口播稿
+        ├── outline.md            # 开发计划
+        └── presentation/         # scaffold 产出的 Vite 项目
 ```
 
 ### 新建视频
 
 ```bash
-# 1. 在 videos/ 下按日期命名建目录
+# 1. 建目录
 mkdir -p videos/2026-06-my-topic
 
-# 2. 在该目录下 scaffold（presentation/ 子目录会自动创建）
+# 2. scaffold
 cd videos/2026-06-my-topic
-bash ../../.claude/skills/web-video-presentation/scripts/scaffold.sh \
+bash ../../.claude/skills/nuo-video/scripts/scaffold.sh \
   ./presentation --theme=midnight-press
 
 # 3. 开发
@@ -45,11 +47,11 @@ cd presentation && npm run dev
 
 ### 目录命名约定
 
-`videos/<YYYY-MM>-<slug>/`——月份对齐发布排期，slug 用英文短横线。已发布的视频目录不要改名（outline/script 里可能有相对路径引用）。
+`videos/<YYYY-MM>-<slug>/`——月份对齐发布排期，slug 用英文短横线。已发布的视频目录不要改名。
 
-### 共享素材引用
+### 素材引用
 
-`resources/` 里的素材在视频项目中通过相对路径或手动复制使用。scaffold 产出的 Vite 项目只认 `public/` 和 `src/` 内的资源，需要的图从 `resources/` 拷到 `presentation/public/` 或 `presentation/src/assets/`。
+`assets/logos/` 和 `assets/mascots/` 里的素材需要拷到视频项目的 `presentation/public/` 或 `presentation/src/assets/` 才能被 Vite 引用。
 
 ## UP 主风格校准
 
@@ -72,7 +74,7 @@ cd presentation && npm run dev
 
 ### Skill 工作流
 
-`.claude/skills/web-video-presentation/SKILL.md` 是 Agent Skill 的主入口，定义了完整的 4 阶段工作流和硬 checkpoint：
+`.claude/skills/nuo-video/SKILL.md` 是 Agent Skill 的主入口，定义了完整的 4 阶段工作流和硬 checkpoint：
 
 ```
 Phase 1  内容编写（article → script.md + outline.md）
@@ -87,11 +89,12 @@ Phase 4  录屏 + 后期
 
 ### 模板运行时架构
 
-`.claude/skills/web-video-presentation/templates/` 是脚手架模板，被 `scaffold.sh` 复制到目标项目。核心机制：
+`.claude/skills/nuo-video/templates/` 是脚手架模板，被 `scaffold.sh` 复制到目标项目。核心机制：
 
 - **全局 step 游标**：`useStepper` hook 维护 `(chapter, step)` 游标，localStorage 持久化。点击/键盘/Auto 模式共享一个推进函数
+- **键盘统一处理**：`useKeyboard` hook 集中管理所有快捷键。Space 在 manual/audio 模式推进，auto 模式未启动时只触发播放，auto 运行中不响应
 - **章节注册**：`src/registry/chapters.ts` 是章节注册中心，每个 `ChapterDef` 包含 `id`、`title`、`narrations[]`、`Component`
-- **narrations.ts 是唯一真相源**：每章目录下的 `narrations.ts` 数组长度 = step 数，同时驱动运行时游标和音频合成管线。5 处（script/outline/章节代码/chapters.ts/音频文件）同步靠它
+- **narrations.ts 是唯一真相源**：每章目录下的 `narrations.ts` 数组长度 = step 数，同时驱动运行时游标和音频合成管线
 - **主题 token**：视觉属性走 CSS 变量（`src/styles/tokens.css`），换主题 = 覆盖这个文件
 - **Stage 组件**：固定 1920×1080 坐标系 + `transform: scale()` 适配视口，无响应式
 
@@ -105,8 +108,6 @@ src/chapters/<NN>-<id>/
 ```
 
 ### references/ 按阶段分文件
-
-不同阶段读不同的 reference 文件，不需要一次全读：
 
 | 阶段 | 必读 |
 |---|---|
@@ -123,11 +124,11 @@ src/chapters/<NN>-<id>/
 ```bash
 # 创建新视频项目
 mkdir -p videos/2026-06-my-topic && cd videos/2026-06-my-topic
-bash ../../.claude/skills/web-video-presentation/scripts/scaffold.sh \
+bash ../../.claude/skills/nuo-video/scripts/scaffold.sh \
   ./presentation --theme=paper-press
 
-# 列出可用主题
-bash .claude/skills/web-video-presentation/scripts/scaffold.sh --list-themes
+# 列出可用主题（从仓库根）
+bash .claude/skills/nuo-video/scripts/scaffold.sh --list-themes
 ```
 
 ### 开发（在脚手架产出的项目目录内）
@@ -163,4 +164,4 @@ npm run synthesize-audio       # mmx-cli 合成 mp3 到 public/audio/
 
 paper-press / warm-keynote / midnight-press / blueprint / chalk-garden / terminal-green / bauhaus-bold / sunset-zine / newsroom / monochrome-print
 
-换主题：`cp themes/<id>/tokens.css <project>/src/styles/tokens.css`
+换主题：`cp .claude/skills/nuo-video/themes/<id>/tokens.css <project>/src/styles/tokens.css`

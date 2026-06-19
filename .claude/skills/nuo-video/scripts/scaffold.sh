@@ -7,15 +7,15 @@
 #   bash scripts/scaffold.sh --list-themes
 #
 # 例子：
-#   bash .claude/skills/web-video-presentation/scripts/scaffold.sh ./presentation
-#   bash .claude/skills/web-video-presentation/scripts/scaffold.sh ./talk --theme=paper-press
-#   bash .claude/skills/web-video-presentation/scripts/scaffold.sh --list-themes
+#   bash .claude/skills/nuo-video/scripts/scaffold.sh ./presentation
+#   bash .claude/skills/nuo-video/scripts/scaffold.sh ./talk --theme=paper-press
+#   bash .claude/skills/nuo-video/scripts/scaffold.sh --list-themes
 #
 # 跑完后，看 SKILL.md "Phase 2.4 实现单章" + references/CHAPTER-CRAFT.md
 # 了解每章怎么写。卡壳时翻 references/EXAMPLES/ 找完整章节 anchor。
 #
 # 之后切换主题，覆盖一个文件即可：
-#   cp .claude/skills/web-video-presentation/themes/<id>/tokens.css \
+#   cp .claude/skills/nuo-video/themes/<id>/tokens.css \
 #      <project>/src/styles/tokens.css
 # ─────────────────────────────────────────────────────────────
 set -euo pipefail

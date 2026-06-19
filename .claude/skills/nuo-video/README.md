@@ -1,16 +1,16 @@
-# Web Video Presentation Skill
+# Nuo Video Skill
 
 **A method-driven agent skill for turning scripts and articles into click-driven 16:9 web presentations that can be screen-recorded as cinematic videos.**
 
 [中文文档](./README.zh-CN.md) · [Back to collection root](../../README.md)
 
-![Web Video Presentation Skill](../../dist/imgs/web-video-presentation-skill.png)
+![Web Video Presentation Skill](../../dist/imgs/nuo-video-skill.png)
 
 ---
 
 ## What Is This?
 
-`web-video-presentation` helps an agent build a Vite + React + TypeScript presentation that behaves like a video production surface rather than a slide deck. Each click advances one narration beat, each step owns the whole 1920×1080 stage, and the progress UI stays hidden unless hovered so the output is clean for screen recording.
+`nuo-video` helps an agent build a Vite + React + TypeScript presentation that behaves like a video production surface rather than a slide deck. Each click advances one narration beat, each step owns the whole 1920×1080 stage, and the progress UI stays hidden unless hovered so the output is clean for screen recording.
 
 It is designed for:
 
@@ -64,7 +64,7 @@ The checkpoints are part of the skill contract: the agent should not silently ru
 ## What It Ships
 
 ```text
-.claude/skills/web-video-presentation/
+.claude/skills/nuo-video/
 ├── SKILL.md
 ├── README.md / README.zh-CN.md
 ├── references/
@@ -98,13 +98,13 @@ Copy the skill into the directory your agent scans, then ask it to turn a script
 To scaffold manually from inside a project:
 
 ```bash
-bash .claude/skills/web-video-presentation/scripts/scaffold.sh ./presentation --theme=paper-press
+bash .claude/skills/nuo-video/scripts/scaffold.sh ./presentation --theme=paper-press
 ```
 
 List available themes:
 
 ```bash
-bash .claude/skills/web-video-presentation/scripts/scaffold.sh --list-themes
+bash .claude/skills/nuo-video/scripts/scaffold.sh --list-themes
 ```
 
 The generated `presentation/` project is a normal Vite + React + TypeScript app. Run it like any other Vite project, then record the 16:9 stage with your screen recorder.
