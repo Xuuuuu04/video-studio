@@ -14,14 +14,21 @@ export function useStageScale(
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
+    let raf = 0;
     function update() {
-      const usefulW = Math.max(320, window.innerWidth - marginX * 2);
-      const usefulH = Math.max(180, window.innerHeight - marginY * 2);
-      setScale(Math.min(usefulW / baseW, usefulH / baseH));
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const usefulW = Math.max(320, window.innerWidth - marginX * 2);
+        const usefulH = Math.max(180, window.innerHeight - marginY * 2);
+        setScale(Math.min(usefulW / baseW, usefulH / baseH));
+      });
     }
     update();
     window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      cancelAnimationFrame(raf);
+    };
   }, [baseW, baseH, marginX, marginY]);
 
   return scale;
