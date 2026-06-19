@@ -78,13 +78,12 @@ jobs:
         run: npm ci
 
       - name: generate script + outline
-        working-directory: .github/scripts
         env:
           MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
           MINIMAX_BASE_URL: ${{ vars.MINIMAX_BASE_URL }}
           MINIMAX_MODEL: ${{ vars.MINIMAX_MODEL }}
           VIDEO_SLUG: ${{ steps.parse-slug.outputs.slug }}
-        run: node generate-content.mjs
+        run: node .github/scripts/generate-content.mjs
 
       - name: commit generated content
         env:
