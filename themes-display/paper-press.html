@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>paper-press · 亮色印刷</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  /* ─── palette ─── */
+  --shell:        #d8cfb8;
+  --surface:      #efe7d6;
+  --surface-2:    #f5f0e5;
+  --surface-3:    #ece4d2;
+  --text:         #1a1714;
+  --text-2:       #2c2823;
+  --text-mute:    #6b685e;
+  --text-faint:   #98948a;
+  --rule:         #d4ccba;
+  --accent:       #ff4a2b;
+  --accent-soft:  rgba(255, 74, 43, 0.10);
+  --accent-glow:  rgba(255, 74, 43, 0.30);
+
+  --font-display-cn: "Noto Serif SC", "Source Han Serif SC", serif;
+  --font-display-en: "Instrument Serif", "GT Sectra", "Playfair Display", Georgia, serif;
+  --font-body:       "Manrope", "Inter", "Noto Sans SC", -apple-system, sans-serif;
+  --font-mono:       "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+
+  --r-card:         4px;
+  --r-stage:        0;
+  --rule-w:         1px;
+  --rule-style:     solid;
+  --hero-num-font:    var(--font-display-en);
+  --hero-num-style:   italic;
+  --hero-num-weight:  400;
+  --hero-num-track:   -0.025em;
+  --stage-pad-x:   140px;
+  --stage-pad-y:   100px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: #1c1c1c;
+  font-family: var(--font-body);
+  color: #ccc;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 24px; gap: 24px;
+}
+.theme-bar {
+  width: min(1180px, 96vw);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  font-family: var(--font-mono); color: #888;
+}
+.theme-bar .meta { display: flex; gap: 16px; }
+.theme-bar .swatches { display: flex; gap: 8px; }
+.theme-bar .swatches span {
+  width: 22px; height: 22px; border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+.theme-bar a { color: #aaa; text-decoration: none; }
+.theme-bar a:hover { color: #fff; }
+
+.stage-wrap { width: min(1180px, 96vw); aspect-ratio: 16 / 9; position: relative; }
+.stage {
+  position: absolute; inset: 0;
+  background: var(--surface);
+  border-radius: var(--r-stage);
+  box-shadow:
+    0 1px 0 var(--rule),
+    0 24px 60px rgba(40, 30, 15, 0.18),
+    0 60px 160px rgba(40, 30, 15, 0.35),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--font-body);
+  padding: var(--stage-pad-y) var(--stage-pad-x);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+/* paper grain (multiply) */
+.stage::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' seed='4'/><feColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.55 0 0 0 0 0.45 0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 280px 280px;
+  mix-blend-mode: multiply;
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 1;
+}
+.hero, .aside { position: relative; z-index: 2; }
+
+.hero { display: flex; flex-direction: column; gap: 24px; }
+.kicker {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-mute);
+}
+.kicker .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.hero-num {
+  font-family: var(--hero-num-font);
+  font-style: var(--hero-num-style);
+  font-weight: var(--hero-num-weight);
+  letter-spacing: var(--hero-num-track);
+  font-size: 184px; line-height: 0.9;
+  color: var(--accent);
+  margin: 0;
+}
+.hero-headline {
+  font-family: var(--font-display-cn); font-weight: 700;
+  font-size: 56px; line-height: 1.1; color: var(--text);
+  margin: 0; max-width: 12ch;
+}
+.hero-sub {
+  font-family: var(--font-body); font-size: 20px; line-height: 1.5;
+  color: var(--text-2); margin: 0; max-width: 28ch;
+}
+
+.aside { display: flex; flex-direction: column; gap: 28px; }
+.topics { display: flex; flex-direction: column; gap: 12px; }
+.topic {
+  background: var(--surface-2);
+  border: var(--rule-w) solid var(--rule);
+  border-radius: var(--r-card);
+  padding: 18px 20px;
+  display: flex; align-items: baseline; gap: 16px;
+}
+.topic .num {
+  font-family: var(--font-display-en); font-style: italic;
+  font-size: 28px; color: var(--accent); letter-spacing: 0;
+}
+.topic .label {
+  font-family: var(--font-display-cn); font-weight: 700;
+  font-size: 20px; color: var(--text);
+}
+.topic .note {
+  margin-left: auto;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-mute);
+}
+.data-panel {
+  background: var(--surface-3);
+  border: var(--rule-w) solid var(--rule);
+  border-radius: var(--r-card);
+  padding: 18px 20px;
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-2); line-height: 1.7;
+}
+.data-panel .row { display: flex; justify-content: space-between; gap: 12px; }
+.data-panel .row .k { color: var(--text-mute); }
+.data-panel .row .v { color: var(--text); }
+.data-panel .row .v.accent { color: var(--accent); }
+.data-panel .bar { height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; margin-top: 4px; }
+.data-panel .bar > i { display: block; height: 100%; background: var(--accent); }
+
+.theme-caption {
+  width: min(1180px, 96vw);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  font-size: 13px; color: #aaa; line-height: 1.6;
+}
+.theme-caption h2 { margin: 0 0 8px 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #666; }
+.theme-caption .zh { font-family: var(--font-display-cn); }
+.theme-caption .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.theme-caption .tags span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; padding: 4px 10px; background: #1c1c1c; border: 1px solid #2a2a2a; border-radius: 999px; color: #888; }
+</style>
+</head>
+<body>
+
+<div class="theme-bar">
+  <a href="index.html">← Gallery</a>
+  <div class="meta">
+    <span>paper-press · 亮色印刷</span>
+    <span>10 of 10 themes</span>
+  </div>
+  <div class="swatches" title="shell · surface · text · accent">
+    <span style="background:#d8cfb8"></span>
+    <span style="background:#efe7d6"></span>
+    <span style="background:#1a1714"></span>
+    <span style="background:#ff4a2b"></span>
+  </div>
+</div>
+
+<div class="stage-wrap">
+  <div class="stage">
+
+    <div class="hero">
+      <div class="kicker"><span class="dot"></span><span>H1 · 2026 模型格局复盘</span></div>
+      <h1 class="hero-num">H1</h1>
+      <h2 class="hero-headline">这半年，<br/>AI 圈到底变到哪了？</h2>
+      <p class="hero-sub">按月份串，把模型演变、跑分变化、订阅机制都过一遍。</p>
+    </div>
+
+    <div class="aside">
+      <div class="topics">
+        <div class="topic"><span class="num">01</span><span class="label">模型版本演变</span><span class="note">GLM · M2 · DS V4</span></div>
+        <div class="topic"><span class="num">02</span><span class="label">Benchmark 变化</span><span class="note">能力 · 跑分 · 实测</span></div>
+        <div class="topic"><span class="num">03</span><span class="label">订阅机制调整</span><span class="note">5h · 7d · Coding Plan</span></div>
+      </div>
+      <div class="data-panel">
+        <div class="row"><span class="k">// H1 大事件</span><span class="v accent">↑ 3</span></div>
+        <div class="row"><span class="k">GLM-5 升级</span><span class="v accent">2026-03</span></div>
+        <div class="row"><span class="k">DS V4 发布</span><span class="v accent">2026-05</span></div>
+        <div class="row"><span class="k">Coding Plan</span><span class="v accent">2026-04</span></div>
+        <div class="bar"><i style="width:72%"></i></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="theme-caption">
+  <div>
+    <h2>Description</h2>
+    <p class="zh">暖色奶油底 + 单一热橙强调色。杂志气质、柔和日间审美。</p>
+    <h2 style="margin-top:16px">Best for</h2>
+    <div class="tags"><span>杂志型内容</span><span>生活方式</span><span>日常工具评测</span><span>温和教程</span></div>
+  </div>
+  <div>
+    <h2>Mood</h2>
+    <div class="tags"><span>light</span><span>editorial</span><span>magazine</span><span>warm</span><span>daytime</span></div>
+    <h2 style="margin-top:16px">Design knobs</h2>
+    <p style="font-family:var(--font-mono); font-size:12px; color:#666; line-height:1.8">
+      hero: italic Instrument Serif<br/>
+      rule: 1px faint paper line<br/>
+      card: 4px, paper-lift shadow<br/>
+      surface: multiply paper grain<br/>
+      motion: 700ms slow cinematic
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

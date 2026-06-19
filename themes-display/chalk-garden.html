@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>chalk-garden · 粉笔花园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  /* ─── palette ─── */
+  --shell:        #16171c;
+  --surface:      #1e1e24;
+  --surface-2:    #28282f;
+  --surface-3:    #34343c;
+  --text:         #f4f4f5;
+  --text-2:       #d4d4d8;
+  --text-mute:    #a1a1aa;
+  --text-faint:   #71717a;
+  --rule:         rgba(255, 255, 255, 0.20);
+  --accent:       #facc15;
+  --accent-soft:  rgba(250, 204, 21, 0.14);
+  --accent-glow:  rgba(250, 204, 21, 0.55);
+
+  /* ─── fonts ─── */
+  --font-display-cn: "Patrick Hand", "Noto Sans SC", cursive, sans-serif;
+  --font-display-en: "Patrick Hand", "Caveat", cursive;
+  --font-body:       "Patrick Hand", "Noto Sans SC", sans-serif;
+  --font-mono:       "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+
+  --r-card:         16px;
+  --r-stage:        0;
+  --rule-w:         2px;
+  --rule-style:     dashed;
+  --hero-num-font:    var(--font-display-en);
+  --hero-num-style:   normal;
+  --hero-num-weight:  400;
+  --hero-num-track:   0;
+  --stage-pad-x:   120px;
+  --stage-pad-y:   80px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: #0a0a0a;
+  font-family: var(--font-body);
+  color: #d4d4d8;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 24px; gap: 24px;
+}
+.theme-bar {
+  width: min(1180px, 96vw);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  font-family: var(--font-mono); color: #888;
+}
+.theme-bar .meta { display: flex; gap: 16px; }
+.theme-bar .swatches { display: flex; gap: 8px; }
+.theme-bar .swatches span { width: 22px; height: 22px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); }
+.theme-bar a { color: #aaa; text-decoration: none; }
+.theme-bar a:hover { color: #facc15; }
+
+.stage-wrap { width: min(1180px, 96vw); aspect-ratio: 16 / 9; position: relative; }
+.stage {
+  position: absolute; inset: 0;
+  background: var(--surface);
+  border-radius: var(--r-stage);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06);
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--font-body);
+  padding: var(--stage-pad-y) var(--stage-pad-x);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+/* film grain overlay */
+.stage::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");
+  background-size: 240px 240px;
+  mix-blend-mode: overlay;
+  opacity: 0.20;
+  pointer-events: none;
+  z-index: 2;
+}
+/* radial vignette */
+.stage::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+.hero, .aside { position: relative; z-index: 3; }
+
+.hero { display: flex; flex-direction: column; gap: 24px; }
+.kicker {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.06em; color: var(--text-mute);
+}
+.kicker .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+.hero-num {
+  font-family: var(--hero-num-font);
+  font-style: var(--hero-num-style);
+  font-weight: var(--hero-num-weight);
+  letter-spacing: var(--hero-num-track);
+  font-size: 160px; line-height: 0.95;
+  color: var(--accent);
+  margin: 0;
+  text-shadow: 0 0 16px var(--accent-glow);
+}
+.hero-headline {
+  font-family: var(--font-display-cn); font-weight: 400;
+  font-size: 44px; line-height: 1.15; color: var(--text);
+  margin: 0; max-width: 16ch;
+}
+.hero-sub {
+  font-family: var(--font-body); font-size: 18px; line-height: 1.55;
+  color: var(--text-2); margin: 0; max-width: 36ch;
+}
+
+.aside { display: flex; flex-direction: column; gap: 24px; }
+.topics { display: flex; flex-direction: column; gap: 12px; }
+.topic {
+  background: var(--surface-2);
+  border: var(--rule-w) var(--rule-style) var(--rule);
+  border-radius: var(--r-card);
+  padding: 16px 20px;
+  display: flex; align-items: baseline; gap: 14px;
+  font-family: var(--font-body);
+}
+.topic .num {
+  font-family: var(--font-display-en); font-weight: 400;
+  font-size: 24px; color: var(--accent); letter-spacing: 0;
+}
+.topic .label {
+  font-family: var(--font-display-cn); font-weight: 400;
+  font-size: 20px; color: var(--text);
+}
+.topic .note {
+  margin-left: auto;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.04em; color: var(--text-mute);
+}
+.data-panel {
+  background: var(--surface-3);
+  border: var(--rule-w) var(--rule-style) var(--rule);
+  border-radius: var(--r-card);
+  padding: 16px 20px;
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-2); line-height: 1.7;
+}
+.data-panel .row { display: flex; justify-content: space-between; gap: 12px; }
+.data-panel .row .k { color: var(--text-mute); }
+.data-panel .row .v { color: var(--text); }
+.data-panel .row .v.accent { color: var(--accent); }
+.data-panel .bar { height: 4px; background: rgba(255,255,255,0.10); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.data-panel .bar > i { display: block; height: 100%; background: var(--accent); box-shadow: 0 0 6px var(--accent-glow); }
+
+.theme-caption {
+  width: min(1180px, 96vw);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  font-size: 13px; color: #aaa; line-height: 1.6;
+  font-family: "Patrick Hand", "Noto Sans SC", sans-serif;
+}
+.theme-caption h2 { margin: 0 0 8px 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #666; }
+.theme-caption .zh { font-family: var(--font-display-cn); }
+.theme-caption .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.theme-caption .tags span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; padding: 4px 10px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 999px; color: #888; }
+</style>
+</head>
+<body>
+
+<div class="theme-bar">
+  <a href="index.html">← Gallery</a>
+  <div class="meta">
+    <span>chalk-garden · 粉笔花园</span>
+    <span>10 of 10 themes</span>
+  </div>
+  <div class="swatches" title="shell · surface · text · accent">
+    <span style="background:#16171c"></span>
+    <span style="background:#1e1e24"></span>
+    <span style="background:#f4f4f5"></span>
+    <span style="background:#facc15"></span>
+  </div>
+</div>
+
+<div class="stage-wrap">
+  <div class="stage">
+
+    <div class="hero">
+      <div class="kicker"><span class="dot"></span><span>· lesson 01 · H1 2026</span></div>
+      <h1 class="hero-num">H1!</h1>
+      <h2 class="hero-headline">来聊聊今年<br/>AI 圈的变化吧</h2>
+      <p class="hero-sub">跟我一起，按月份把模型 / 跑分 / 订阅都过一遍~</p>
+    </div>
+
+    <div class="aside">
+      <div class="topics">
+        <div class="topic"><span class="num">01)</span><span class="label">模型版本演变</span><span class="note">GLM · M2 · DS</span></div>
+        <div class="topic"><span class="num">02)</span><span class="label">跑分怎么变</span><span class="note">能力 · 实测</span></div>
+        <div class="topic"><span class="num">03)</span><span class="label">订阅怎么调</span><span class="note">5h · 7d · Coding</span></div>
+      </div>
+      <div class="data-panel">
+        <div class="row"><span class="k"># events</span><span class="v accent">→ 3</span></div>
+        <div class="row"><span class="k">GLM-5 升级</span><span class="v accent">2026-03</span></div>
+        <div class="row"><span class="k">DS V4 发布</span><span class="v accent">2026-05</span></div>
+        <div class="row"><span class="k">Coding 上线</span><span class="v accent">2026-04</span></div>
+        <div class="bar"><i style="width:72%"></i></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="theme-caption">
+  <div>
+    <h2>Description</h2>
+    <p class="zh">深色石板底 + Patrick Hand 手写字体 + 粉笔黄强调色。教室 / 课堂讲解风。</p>
+    <h2 style="margin-top:16px">Best for</h2>
+    <div class="tags"><span>科普讲解</span><span>教学课堂</span><span>面向初学者</span><span>亲切口吻</span></div>
+  </div>
+  <div>
+    <h2>Mood</h2>
+    <div class="tags"><span>dark</span><span>handwritten</span><span>classroom</span><span>chalk</span><span>playful</span></div>
+    <h2 style="margin-top:16px">Design knobs</h2>
+    <p style="font-family:var(--font-mono); font-size:12px; color:#666; line-height:1.8">
+      hero: chunky handwritten Patrick Hand<br/>
+      rule: 2px DASHED chalk<br/>
+      card: 16px soft radius<br/>
+      surface: film grain + radial vignette<br/>
+      motion: soft hand-drawn pace
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>blueprint · 蓝图</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  /* ─── palette ─── */
+  --shell:        #0a1224;
+  --surface:      #0e1a2e;
+  --surface-2:    #142441;
+  --surface-3:    #1c2f54;
+  --text:         #d6e5ff;
+  --text-2:       #a8c2f0;
+  --text-mute:    #6c89b8;
+  --text-faint:   #3e5680;
+  --rule:         rgba(120, 200, 255, 0.30);
+  --accent:       #4dd2ff;
+  --accent-soft:  rgba(77, 210, 255, 0.10);
+  --accent-glow:  rgba(77, 210, 255, 0.55);
+
+  /* ─── fonts (mono pairing) ─── */
+  --font-display-cn: "Noto Sans SC", sans-serif;
+  --font-display-en: "IBM Plex Mono", monospace;
+  --font-body:       "IBM Plex Mono", monospace;
+  --font-mono:       "IBM Plex Mono", monospace;
+
+  --r-card:         0;
+  --r-stage:        0;
+  --rule-w:         2px;
+  --rule-style:     dashed;
+  --hero-num-font:    var(--font-display-en);
+  --hero-num-style:   normal;
+  --hero-num-weight:  500;
+  --hero-num-track:   0;
+  --stage-pad-x:   120px;
+  --stage-pad-y:   80px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: #050a14;
+  font-family: var(--font-body);
+  color: #d6e5ff;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 24px; gap: 24px;
+}
+.theme-bar {
+  width: min(1180px, 96vw);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: #6c89b8;
+}
+.theme-bar .meta { display: flex; gap: 16px; }
+.theme-bar .swatches { display: flex; gap: 8px; }
+.theme-bar .swatches span { width: 22px; height: 22px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); }
+.theme-bar a { color: #a8c2f0; text-decoration: none; }
+.theme-bar a:hover { color: #4dd2ff; }
+
+.stage-wrap { width: min(1180px, 96vw); aspect-ratio: 16 / 9; position: relative; }
+.stage {
+  position: absolute; inset: 0;
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(rgba(120, 200, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 200, 255, 0.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+  border-radius: var(--r-stage);
+  box-shadow: 0 0 0 1px rgba(77, 210, 255, 0.20), 0 30px 80px rgba(0,0,0,0.6);
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--font-body);
+  padding: var(--stage-pad-y) var(--stage-pad-x);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+/* corner crosshairs (drafting markers) */
+.stage::before,
+.stage::after {
+  content: "+";
+  position: absolute;
+  font-family: var(--font-mono); font-size: 16px;
+  color: var(--accent);
+  opacity: 0.4;
+}
+.stage::before { top: 20px; left: 20px; }
+.stage::after { bottom: 20px; right: 20px; }
+
+.hero, .aside { position: relative; z-index: 2; }
+
+.hero { display: flex; flex-direction: column; gap: 24px; }
+.kicker {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-mute);
+}
+.kicker .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+.hero-num {
+  font-family: var(--hero-num-font);
+  font-style: var(--hero-num-style);
+  font-weight: var(--hero-num-weight);
+  letter-spacing: var(--hero-num-track);
+  font-size: 160px; line-height: 0.9;
+  color: var(--accent);
+  margin: 0;
+  text-shadow: 0 0 30px var(--accent-glow);
+}
+.hero-headline {
+  font-family: var(--font-display-cn); font-weight: 700;
+  font-size: 48px; line-height: 1.1; color: var(--text);
+  margin: 0; max-width: 14ch;
+}
+.hero-sub {
+  font-family: var(--font-mono); font-size: 16px; line-height: 1.6;
+  color: var(--text-2); margin: 0; max-width: 36ch;
+}
+
+.aside { display: flex; flex-direction: column; gap: 28px; }
+.topics { display: flex; flex-direction: column; gap: 12px; }
+.topic {
+  background: rgba(20, 36, 65, 0.6);
+  border: var(--rule-w) var(--rule-style) var(--accent);
+  border-radius: var(--r-card);
+  padding: 18px 20px;
+  display: flex; align-items: baseline; gap: 16px;
+}
+.topic .num {
+  font-family: var(--font-mono); font-weight: 500;
+  font-size: 22px; color: var(--accent); letter-spacing: 0;
+}
+.topic .label {
+  font-family: var(--font-mono); font-weight: 500;
+  font-size: 18px; color: var(--text); letter-spacing: 0.02em;
+}
+.topic .note {
+  margin-left: auto;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-mute);
+}
+.data-panel {
+  background: rgba(28, 47, 84, 0.6);
+  border: var(--rule-w) var(--rule-style) var(--accent);
+  border-radius: var(--r-card);
+  padding: 18px 20px;
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-2); line-height: 1.7;
+}
+.data-panel .row { display: flex; justify-content: space-between; gap: 12px; }
+.data-panel .row .k { color: var(--text-mute); }
+.data-panel .row .v { color: var(--text); }
+.data-panel .row .v.accent { color: var(--accent); }
+.data-panel .bar { height: 4px; background: rgba(120, 200, 255, 0.18); overflow: hidden; margin-top: 4px; }
+.data-panel .bar > i { display: block; height: 100%; background: var(--accent); }
+
+.theme-caption {
+  width: min(1180px, 96vw);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  font-size: 13px; color: #a8c2f0; line-height: 1.6;
+}
+.theme-caption h2 { margin: 0 0 8px 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #6c89b8; }
+.theme-caption .zh { font-family: var(--font-display-cn); }
+.theme-caption .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.theme-caption .tags span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; padding: 4px 10px; background: #0e1a2e; border: 1px solid #1c2f54; border-radius: 0; color: #a8c2f0; }
+</style>
+</head>
+<body>
+
+<div class="theme-bar">
+  <a href="index.html">← Gallery</a>
+  <div class="meta">
+    <span>blueprint · 蓝图</span>
+    <span>10 of 10 themes</span>
+  </div>
+  <div class="swatches" title="shell · surface · text · accent">
+    <span style="background:#0a1224"></span>
+    <span style="background:#0e1a2e"></span>
+    <span style="background:#d6e5ff"></span>
+    <span style="background:#4dd2ff"></span>
+  </div>
+</div>
+
+<div class="stage-wrap">
+  <div class="stage">
+
+    <div class="hero">
+      <div class="kicker"><span class="dot"></span><span>// SYS.ARCH.H1_2026</span></div>
+      <h1 class="hero-num">SYS//</h1>
+      <h2 class="hero-headline">H1 系统架构<br/>演化梳理</h2>
+      <p class="hero-sub">// 按月份串，把模型推理栈、token 调度、订阅限制都过一遍</p>
+    </div>
+
+    <div class="aside">
+      <div class="topics">
+        <div class="topic"><span class="num">[01]</span><span class="label">模型推理栈</span><span class="note">GLM / M2 / DS</span></div>
+        <div class="topic"><span class="num">[02]</span><span class="label">Benchmark 调度</span><span class="note">MMLU / GPQA</span></div>
+        <div class="topic"><span class="num">[03]</span><span class="label">Token 配额</span><span class="note">5h / 7d / CODING</span></div>
+      </div>
+      <div class="data-panel">
+        <div class="row"><span class="k">// events.log</span><span class="v accent">[3]</span></div>
+        <div class="row"><span class="k">GLM-5.deploy</span><span class="v accent">2026-03</span></div>
+        <div class="row"><span class="k">DS_V4.ship</span><span class="v accent">2026-05</span></div>
+        <div class="row"><span class="k">CODING.enable</span><span class="v accent">2026-04</span></div>
+        <div class="bar"><i style="width:72%"></i></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="theme-caption">
+  <div>
+    <h2>Description</h2>
+    <p class="zh">深藏青底 + 青色强调色 + IBM Plex Mono。工程蓝图 / 工业图纸气质。</p>
+    <h2 style="margin-top:16px">Best for</h2>
+    <div class="tags"><span>技术架构</span><span>系统拆解</span><span>技术评测</span><span>API / SDK</span></div>
+  </div>
+  <div>
+    <h2>Mood</h2>
+    <div class="tags"><span>dark</span><span>engineering</span><span>blueprint</span><span>industrial</span><span>technical</span></div>
+    <h2 style="margin-top:16px">Design knobs</h2>
+    <p style="font-family:var(--font-mono); font-size:12px; color:#6c89b8; line-height:1.8">
+      hero: mono cyan, 0 letter-spacing<br/>
+      rule: 2px DASHED cyan (drafting)<br/>
+      card: 2px solid border, 0 radius<br/>
+      surface: 60px drafting grid<br/>
+      motion: measured (precise tools)
+    </p>
+  </div>
+</div>
+
+</body>
+</html>
