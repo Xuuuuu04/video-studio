@@ -1,23 +1,36 @@
 import type { ChapterDef } from "./types";
-import ExampleChapter from "../chapters/01-example/Example";
-import { narrations as exampleNarrations } from "../chapters/01-example/narrations";
+import Timeline from "../chapters/01-timeline/Timeline";
+import { narrations as timelineNarrations } from "../chapters/01-timeline/narrations";
+import Benchmark from "../chapters/02-benchmark/Benchmark";
+import { narrations as benchmarkNarrations } from "../chapters/02-benchmark/narrations";
+import Pricing from "../chapters/03-pricing/Pricing";
+import { narrations as pricingNarrations } from "../chapters/03-pricing/narrations";
+import Recommend from "../chapters/04-recommend/Recommend";
+import { narrations as recommendNarrations } from "../chapters/04-recommend/narrations";
 
-/**
- * Order = order of presentation.
- *
- * Each chapter MUST provide a `narrations: Narration[]` array. Its length
- * is the chapter's step count — there is no `totalSteps` to maintain
- * separately. This guarantees the audio synthesis pipeline, the runtime
- * stepper, and the chapter `.tsx` switch on `step` cannot drift apart.
- *
- * Visual styling (color, fonts) comes entirely from the active theme —
- * chapters never hard-code palette / font names. See THEMES.md.
- */
 export const CHAPTERS: ChapterDef[] = [
   {
-    id: "example",
-    title: "示例章节",
-    narrations: exampleNarrations,
-    Component: ExampleChapter,
+    id: "timeline",
+    title: "模型发布时间线",
+    narrations: timelineNarrations,
+    Component: Timeline,
+  },
+  {
+    id: "benchmark",
+    title: "能力 Benchmark 与社区评价",
+    narrations: benchmarkNarrations,
+    Component: Benchmark,
+  },
+  {
+    id: "pricing",
+    title: "定价策略",
+    narrations: pricingNarrations,
+    Component: Pricing,
+  },
+  {
+    id: "recommend",
+    title: "使用推荐",
+    narrations: recommendNarrations,
+    Component: Recommend,
   },
 ];
