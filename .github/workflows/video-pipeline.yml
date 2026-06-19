@@ -1,28 +1,8 @@
 name: video-pipeline
 
-# ============================================================================
-# video-pipeline workflow
-# ============================================================================
-# TRIGGER RULES (anyone modifying this file or pushing tags MUST read first):
-#
-#   1. This workflow runs ONLY on:
-#        (a) Push of a tag matching `v*` (e.g., v1.0-speed-test)
-#        (b) Manual `workflow_dispatch` from the Actions tab
-#
-#   2. Normal `git push` to main does NOT trigger this workflow:
-#        - No jobs run
-#        - No `videos/<slug>/article.md` is looked up
-#        - No errors are raised
-#        - No GitHub Actions minutes are consumed
-#
-#   3. To run the pipeline, push a tag:
-#        git tag v1.0-<slug> && git push --tags
-#      where <slug> matches a directory under `videos/`.
-#
-#   4. Do NOT push a tag just to save code — pushing a tag invokes the LLM
-#      API and consumes GitHub Actions minutes. Use plain `git push` for
-#      normal commits.
-# ============================================================================
+# 触发规则、tag 格式、单次配置说明见仓库根 CLAUDE.md → 「CI / 视频流水线」。
+# This workflow runs only on `v*` tag push or manual `workflow_dispatch`.
+# Normal `git push` to main does NOT trigger anything.
 
 on:
   push:
