@@ -21,3 +21,6 @@ dist/
 .idea/
 *.swp
 *.swo
+
+# 通用背景音乐（仓库根 assets/bgm/，不入仓）
+assets/bgm/
