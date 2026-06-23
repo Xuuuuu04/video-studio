@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>terminal-green · 终端绿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --shell:        #050a05;
+  --surface:      #0a0f0a;
+  --surface-2:    #0f140f;
+  --surface-3:    #14201a;
+  --text:         #d3f0d3;
+  --text-2:       #a8d8a8;
+  --text-mute:    #6c8a6c;
+  --text-faint:   #3a5a3a;
+  --rule:         rgba(0, 255, 136, 0.25);
+  --accent:       #00ff88;
+  --accent-soft:  rgba(0, 255, 136, 0.12);
+  --accent-glow:  rgba(0, 255, 136, 0.55);
+
+  /* only one font, for everything */
+  --font-display-cn: "JetBrains Mono", monospace;
+  --font-display-en: "JetBrains Mono", monospace;
+  --font-body:       "JetBrains Mono", monospace;
+  --font-mono:       "JetBrains Mono", monospace;
+
+  --r-card:         2px;
+  --r-stage:        0;
+  --rule-w:         1px;
+  --rule-style:     solid;
+  --hero-num-font:    var(--font-mono);
+  --hero-num-style:   normal;
+  --hero-num-weight:  700;
+  --hero-num-track:   0;
+  --stage-pad-x:   100px;
+  --stage-pad-y:   80px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: #000;
+  font-family: var(--font-mono);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 24px; gap: 24px;
+}
+.theme-bar {
+  width: min(1180px, 96vw);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: #6c8a6c;
+}
+.theme-bar .meta { display: flex; gap: 16px; }
+.theme-bar .swatches { display: flex; gap: 8px; }
+.theme-bar .swatches span { width: 22px; height: 22px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); }
+.theme-bar a { color: #a8d8a8; text-decoration: none; }
+.theme-bar a:hover { color: #00ff88; }
+
+.stage-wrap { width: min(1180px, 96vw); aspect-ratio: 16 / 9; position: relative; }
+.stage {
+  position: absolute; inset: 0;
+  background: var(--surface);
+  border-radius: var(--r-stage);
+  box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.30), 0 0 80px rgba(0, 255, 136, 0.10), 0 30px 80px rgba(0,0,0,0.8);
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--font-mono);
+  padding: var(--stage-pad-y) var(--stage-pad-x);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+/* CRT scanlines overlay */
+.stage::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 3px,
+    rgba(0, 255, 136, 0.04) 3px,
+    rgba(0, 255, 136, 0.04) 4px
+  );
+  pointer-events: none;
+  z-index: 3;
+}
+/* CRT edge flicker */
+.stage::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,0.35) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+.hero, .aside { position: relative; z-index: 4; }
+
+.hero { display: flex; flex-direction: column; gap: 24px; }
+.kicker {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-mute);
+}
+.kicker .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); animation: blink 1.4s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0.3; } }
+.hero-num {
+  font-family: var(--hero-num-font);
+  font-style: var(--hero-num-style);
+  font-weight: var(--hero-num-weight);
+  letter-spacing: var(--hero-num-track);
+  font-size: 144px; line-height: 0.9;
+  color: var(--accent);
+  margin: 0;
+  text-shadow: 0 0 24px var(--accent-glow);
+}
+.hero-num::before { content: "> "; color: var(--text-mute); font-weight: 400; }
+.hero-headline {
+  font-family: var(--font-mono); font-weight: 500;
+  font-size: 38px; line-height: 1.2; color: var(--text);
+  margin: 0; max-width: 18ch;
+}
+.hero-headline::before { content: "$ "; color: var(--accent); }
+.hero-sub {
+  font-family: var(--font-mono); font-size: 14px; line-height: 1.7;
+  color: var(--text-2); margin: 0; max-width: 42ch;
+}
+.hero-sub::before { content: "# "; color: var(--text-mute); }
+
+.aside { display: flex; flex-direction: column; gap: 20px; }
+.topics { display: flex; flex-direction: column; gap: 10px; }
+.topic {
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-card);
+  padding: 14px 18px;
+  display: flex; align-items: baseline; gap: 14px;
+  font-family: var(--font-mono);
+}
+.topic .num {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 16px; color: var(--accent); letter-spacing: 0;
+}
+.topic .label {
+  font-family: var(--font-mono); font-weight: 500;
+  font-size: 16px; color: var(--text);
+}
+.topic .note {
+  margin-left: auto;
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-mute);
+}
+.data-panel {
+  background: var(--surface-3);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-card);
+  padding: 14px 18px;
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-2); line-height: 1.7;
+}
+.data-panel .row { display: flex; justify-content: space-between; gap: 12px; }
+.data-panel .row .k { color: var(--text-mute); }
+.data-panel .row .v { color: var(--text); }
+.data-panel .row .v.accent { color: var(--accent); }
+.data-panel .bar { height: 4px; background: rgba(0,255,136,0.10); overflow: hidden; margin-top: 6px; }
+.data-panel .bar > i { display: block; height: 100%; background: var(--accent); box-shadow: 0 0 6px var(--accent-glow); }
+
+.theme-caption {
+  width: min(1180px, 96vw);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  font-size: 13px; color: #a8d8a8; line-height: 1.6;
+  font-family: var(--font-mono);
+}
+.theme-caption h2 { margin: 0 0 8px 0; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #6c8a6c; }
+.theme-caption .zh { font-family: "Noto Sans SC", sans-serif; }
+.theme-caption .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.theme-caption .tags span { font-size: 11px; letter-spacing: 0.04em; padding: 3px 10px; background: #0a0f0a; border: 1px solid #14201a; border-radius: 0; color: #a8d8a8; }
+</style>
+</head>
+<body>
+
+<div class="theme-bar">
+  <a href="index.html">← Gallery</a>
+  <div class="meta">
+    <span>terminal-green · 终端绿</span>
+    <span>10 of 10 themes</span>
+  </div>
+  <div class="swatches" title="shell · surface · text · accent">
+    <span style="background:#050a05"></span>
+    <span style="background:#0a0f0a"></span>
+    <span style="background:#d3f0d3"></span>
+    <span style="background:#00ff88"></span>
+  </div>
+</div>
+
+<div class="stage-wrap">
+  <div class="stage">
+
+    <div class="hero">
+      <div class="kicker"><span class="dot"></span><span>root@h1-2026:~# ./review.sh</span></div>
+      <h1 class="hero-num">H1/2026</h1>
+      <h2 class="hero-headline">AI 圈上半年演化.log</h2>
+      <p class="hero-sub">tail -f 实时按月份串,把模型、跑分、订阅都跑一遍</p>
+    </div>
+
+    <div class="aside">
+      <div class="topics">
+        <div class="topic"><span class="num">[01]</span><span class="label">./models.log</span><span class="note">GLM / M2 / DS</span></div>
+        <div class="topic"><span class="num">[02]</span><span class="label">./bench.log</span><span class="note">mmlu / gpqa</span></div>
+        <div class="topic"><span class="num">[03]</span><span class="label">./quota.log</span><span class="note">5h/7d/coding</span></div>
+      </div>
+      <div class="data-panel">
+        <div class="row"><span class="k">events_count:</span><span class="v accent">3</span></div>
+        <div class="row"><span class="k">glm5.deploy:</span><span class="v accent">2026-03</span></div>
+        <div class="row"><span class="k">dsv4.ship:</span><span class="v accent">2026-05</span></div>
+        <div class="row"><span class="k">coding.on:</span><span class="v accent">2026-04</span></div>
+        <div class="bar"><i style="width:72%"></i></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="theme-caption">
+  <div>
+    <h2>Description</h2>
+    <p class="zh">纯黑底 + 磷光绿强调色, 全程等宽字体。Matrix 黑客 / 80 年代终端感。</p>
+    <h2 style="margin-top:16px">Best for</h2>
+    <div class="tags"><span>CLI 教程</span><span>命令行实操</span><span>黑客 / 安全</span><span>复古技术致敬</span></div>
+  </div>
+  <div>
+    <h2>Mood</h2>
+    <div class="tags"><span>dark</span><span>terminal</span><span>hacker</span><span>phosphor</span><span>technical</span></div>
+    <h2 style="margin-top:16px">Design knobs</h2>
+    <p style="font-size:12px; color:#6c8a6c; line-height:1.8">
+      &gt; hero: mono, 0 letter-spacing<br/>
+      &gt; rule: 1px solid phosphor green<br/>
+      &gt; card: 2px sharp<br/>
+      &gt; surface: CRT scanlines + edge vignette<br/>
+      &gt; motion: 240ms snappy terminal speed
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

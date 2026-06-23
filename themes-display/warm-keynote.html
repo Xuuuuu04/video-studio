@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>warm-keynote · 暖色 Keynote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  /* ─── palette ─── */
+  --shell:        #f5efe1;
+  --surface:      #fdfbf7;
+  --surface-2:    #ffffff;
+  --surface-3:    #f0e9d8;
+  --text:         #43302b;
+  --text-2:       #5b443d;
+  --text-mute:    #8a7969;
+  --text-faint:   #b8a994;
+  --rule:         #e6dcc4;
+  --accent:       #14b8a6;
+  --accent-soft:  rgba(20, 184, 166, 0.10);
+  --accent-glow:  rgba(20, 184, 166, 0.45);
+
+  /* ─── fonts ─── */
+  --font-display-cn: "Noto Sans SC", "Source Han Sans SC", -apple-system, sans-serif;
+  --font-display-en: "Inter", "SF Pro Display", -apple-system, sans-serif;
+  --font-body:       "Inter", "Noto Sans SC", -apple-system, sans-serif;
+  --font-mono:       "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+
+  --r-card:         32px;
+  --r-stage:        0;
+  --rule-w:         1px;
+  --rule-style:     solid;
+  --hero-num-font:    var(--font-display-en);
+  --hero-num-style:   normal;
+  --hero-num-weight:  900;
+  --hero-num-track:   -0.04em;
+  --stage-pad-x:   100px;
+  --stage-pad-y:   80px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: #f5efe1;
+  font-family: var(--font-body);
+  color: #5b443d;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 24px; gap: 24px;
+}
+.theme-bar {
+  width: min(1180px, 96vw);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  font-family: var(--font-mono); color: #8a7969;
+}
+.theme-bar .meta { display: flex; gap: 16px; }
+.theme-bar .swatches { display: flex; gap: 8px; }
+.theme-bar .swatches span { width: 22px; height: 22px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08); }
+.theme-bar a { color: #5b443d; text-decoration: none; }
+.theme-bar a:hover { color: #14b8a6; }
+
+.stage-wrap { width: min(1180px, 96vw); aspect-ratio: 16 / 9; position: relative; }
+.stage {
+  position: absolute; inset: 0;
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(rgba(190, 175, 150, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(190, 175, 150, 0.18) 1px, transparent 1px);
+  background-size: 40px 40px;
+  border-radius: var(--r-stage);
+  box-shadow: 0 60px 160px rgba(67,48,43,0.18), 0 0 0 1px rgba(0,0,0,0.03);
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--font-body);
+  padding: var(--stage-pad-y) var(--stage-pad-x);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.hero, .aside { position: relative; z-index: 2; }
+
+.hero { display: flex; flex-direction: column; gap: 24px; }
+.kicker {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-mute);
+}
+.kicker .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+.hero-num {
+  font-family: var(--hero-num-font);
+  font-style: var(--hero-num-style);
+  font-weight: var(--hero-num-weight);
+  letter-spacing: var(--hero-num-track);
+  font-size: 168px; line-height: 0.95;
+  color: var(--text);
+  margin: 0;
+}
+.hero-num .accent { color: var(--accent); }
+.hero-headline {
+  font-family: var(--font-display-cn); font-weight: 900;
+  font-size: 50px; line-height: 1.1; color: var(--text);
+  margin: 0; max-width: 14ch;
+}
+.hero-sub {
+  font-family: var(--font-body); font-size: 19px; line-height: 1.55;
+  color: var(--text-2); margin: 0; max-width: 32ch;
+}
+
+.aside { display: flex; flex-direction: column; gap: 24px; }
+.topics { display: flex; flex-direction: column; gap: 14px; }
+.topic {
+  background: rgba(255, 255, 255, 0.85);
+  border: var(--rule-w) solid rgba(255, 255, 255, 0.9);
+  border-radius: var(--r-card);
+  padding: 22px 26px;
+  display: flex; align-items: baseline; gap: 16px;
+  box-shadow: 0 1px 2px rgba(67,48,43,0.04), 0 24px 60px rgba(67,48,43,0.10);
+}
+.topic .num {
+  font-family: var(--font-display-en); font-weight: 900;
+  font-size: 24px; color: var(--accent); letter-spacing: -0.02em;
+}
+.topic .label {
+  font-family: var(--font-display-cn); font-weight: 700;
+  font-size: 20px; color: var(--text);
+}
+.topic .note {
+  margin-left: auto;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-mute);
+}
+.data-panel {
+  background: rgba(255, 255, 255, 0.85);
+  border: var(--rule-w) solid rgba(255, 255, 255, 0.9);
+  border-radius: var(--r-card);
+  padding: 22px 26px;
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-2); line-height: 1.7;
+  box-shadow: 0 1px 2px rgba(67,48,43,0.04), 0 24px 60px rgba(67,48,43,0.10);
+}
+.data-panel .row { display: flex; justify-content: space-between; gap: 12px; }
+.data-panel .row .k { color: var(--text-mute); }
+.data-panel .row .v { color: var(--text); font-weight: 600; }
+.data-panel .row .v.accent { color: var(--accent); }
+.data-panel .bar { height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.data-panel .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+
+.theme-caption {
+  width: min(1180px, 96vw);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  font-size: 13px; color: #5b443d; line-height: 1.6;
+}
+.theme-caption h2 { margin: 0 0 8px 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #8a7969; }
+.theme-caption .zh { font-family: var(--font-display-cn); }
+.theme-caption .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.theme-caption .tags span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; padding: 4px 10px; background: #fdfbf7; border: 1px solid #e6dcc4; border-radius: 999px; color: #8a7969; }
+</style>
+</head>
+<body>
+
+<div class="theme-bar">
+  <a href="index.html">← Gallery</a>
+  <div class="meta">
+    <span>warm-keynote · 暖色 Keynote</span>
+    <span>10 of 10 themes</span>
+  </div>
+  <div class="swatches" title="shell · surface · text · accent">
+    <span style="background:#f5efe1"></span>
+    <span style="background:#fdfbf7"></span>
+    <span style="background:#43302b"></span>
+    <span style="background:#14b8a6"></span>
+  </div>
+</div>
+
+<div class="stage-wrap">
+  <div class="stage">
+
+    <div class="hero">
+      <div class="kicker"><span class="dot"></span><span>Keynote · H1 2026</span></div>
+      <h1 class="hero-num">H1<span class="accent">.</span>2026</h1>
+      <h2 class="hero-headline">AI 圈上半年<br/>回顾与展望</h2>
+      <p class="hero-sub">按月份串，把模型、跑分、订阅三件事过一遍。</p>
+    </div>
+
+    <div class="aside">
+      <div class="topics">
+        <div class="topic"><span class="num">01</span><span class="label">模型版本</span><span class="note">GLM · M2 · DS</span></div>
+        <div class="topic"><span class="num">02</span><span class="label">Benchmark</span><span class="note">能力 · 实测</span></div>
+        <div class="topic"><span class="num">03</span><span class="label">订阅机制</span><span class="note">5h · 7d · Coding</span></div>
+      </div>
+      <div class="data-panel">
+        <div class="row"><span class="k">events</span><span class="v accent">3</span></div>
+        <div class="row"><span class="k">GLM-5.up</span><span class="v accent">2026-03</span></div>
+        <div class="row"><span class="k">DS_V4.ship</span><span class="v accent">2026-05</span></div>
+        <div class="row"><span class="k">CODING.on</span><span class="v accent">2026-04</span></div>
+        <div class="bar"><i style="width:72%"></i></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="theme-caption">
+  <div>
+    <h2>Description</h2>
+    <p class="zh">奶油纸底 + 单一青色强调色 + 暖色网格。SaaS Keynote 与编辑器气质。</p>
+    <h2 style="margin-top:16px">Best for</h2>
+    <div class="tags"><span>SaaS keynote</span><span>B 端产品</span><span>工具讲解</span><span>团队汇报</span></div>
+  </div>
+  <div>
+    <h2>Mood</h2>
+    <div class="tags"><span>light</span><span>keynote</span><span>editorial</span><span>warm</span><span>saas</span></div>
+    <h2 style="margin-top:16px">Design knobs</h2>
+    <p style="font-family:var(--font-mono); font-size:12px; color:#8a7969; line-height:1.8">
+      hero: chunky black sans (Inter 900)<br/>
+      rule: 1px solid neutral + 4px accent rule<br/>
+      card: 32px large radius, soft warm shadow<br/>
+      surface: warm 40px paper grid<br/>
+      motion: springy with slight overshoot
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

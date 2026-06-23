@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>monochrome-print · 黑白印刷</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Serif+SC:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  /* ─── palette ─── */
+  --shell:        #e8e3d8;
+  --surface:      #fbf9f4;
+  --surface-2:    #ffffff;
+  --surface-3:    #f0ebde;
+  --text:         #0e1418;
+  --text-2:       #1f2a32;
+  --text-mute:    #6b7178;
+  --text-faint:   #a8aeb4;
+  --rule:         #c9c5b8;
+  --accent:       #1a3a8c;
+  --accent-soft:  rgba(26, 58, 140, 0.08);
+  --accent-glow:  rgba(26, 58, 140, 0.25);
+
+  /* ─── fonts ─── */
+  --font-display-cn: "Noto Serif SC", "Source Han Serif SC", serif;
+  --font-display-en: "Source Serif 4", "Source Serif Pro", "EB Garamond", "Times New Roman", serif;
+  --font-body:       "Source Serif 4", "Source Serif Pro", "Noto Serif SC", serif;
+  --font-mono:       "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+
+  --r-card:         4px;
+  --r-stage:        0;
+  --rule-w:         1px;
+  --rule-style:     solid;
+  --hero-num-font:    var(--font-display-en);
+  --hero-num-style:   italic;
+  --hero-num-weight:  500;
+  --hero-num-track:   -0.03em;
+  --stage-pad-x:   140px;
+  --stage-pad-y:   100px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: #e8e3d8;
+  font-family: var(--font-body);
+  color: #1f2a32;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 24px; gap: 24px;
+}
+.theme-bar {
+  width: min(1180px, 96vw);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  font-family: var(--font-mono); color: #6b7178;
+}
+.theme-bar .meta { display: flex; gap: 16px; }
+.theme-bar .swatches { display: flex; gap: 8px; }
+.theme-bar .swatches span { width: 22px; height: 22px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08); }
+.theme-bar a { color: #1f2a32; text-decoration: none; }
+.theme-bar a:hover { color: #1a3a8c; }
+
+.stage-wrap { width: min(1180px, 96vw); aspect-ratio: 16 / 9; position: relative; }
+.stage {
+  position: absolute; inset: 0;
+  background: var(--surface);
+  border-radius: var(--r-stage);
+  box-shadow: 0 60px 160px rgba(20,30,40,0.20), 0 0 0 1px rgba(0,0,0,0.04);
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--font-body);
+  padding: var(--stage-pad-y) var(--stage-pad-x);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 72px;
+  align-items: center;
+  /* no pattern, no vignette — purity */
+}
+.hero, .aside { position: relative; z-index: 2; }
+
+.hero { display: flex; flex-direction: column; gap: 24px; }
+.kicker {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-mute);
+}
+.kicker .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.hero-num {
+  font-family: var(--hero-num-font);
+  font-style: var(--hero-num-style);
+  font-weight: var(--hero-num-weight);
+  letter-spacing: var(--hero-num-track);
+  font-size: 168px; line-height: 0.95;
+  color: var(--text);
+  margin: 0;
+  font-feature-settings: "tnum", "lnum";
+}
+.hero-num .accent { color: var(--accent); font-style: normal; }
+.hero-headline {
+  font-family: var(--font-display-cn); font-weight: 700;
+  font-size: 48px; line-height: 1.15; color: var(--text);
+  margin: 0; max-width: 16ch;
+}
+.hero-sub {
+  font-family: var(--font-body); font-size: 19px; line-height: 1.55;
+  color: var(--text-2); margin: 0; max-width: 34ch;
+  font-style: italic;
+}
+
+.aside { display: flex; flex-direction: column; gap: 24px; }
+.topics { display: flex; flex-direction: column; gap: 12px; }
+.topic {
+  background: var(--surface-2);
+  border: var(--rule-w) solid var(--rule);
+  border-radius: var(--r-card);
+  padding: 18px 20px;
+  display: flex; align-items: baseline; gap: 16px;
+  box-shadow: 0 1px 0 var(--rule), 0 16px 40px rgba(20,30,40,0.06);
+}
+.topic .num {
+  font-family: var(--font-display-en); font-style: italic; font-weight: 500;
+  font-size: 24px; color: var(--accent); letter-spacing: 0;
+}
+.topic .label {
+  font-family: var(--font-display-cn); font-weight: 700;
+  font-size: 19px; color: var(--text);
+}
+.topic .note {
+  margin-left: auto;
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.10em; text-transform: uppercase; color: var(--text-mute);
+}
+.data-panel {
+  background: var(--surface-3);
+  border: var(--rule-w) solid var(--rule);
+  border-radius: var(--r-card);
+  padding: 18px 20px;
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-2); line-height: 1.7;
+  box-shadow: 0 1px 0 var(--rule), 0 16px 40px rgba(20,30,40,0.06);
+}
+.data-panel .row { display: flex; justify-content: space-between; gap: 12px; }
+.data-panel .row .k { color: var(--text-mute); }
+.data-panel .row .v { color: var(--text); }
+.data-panel .row .v.accent { color: var(--accent); }
+.data-panel .bar { height: 3px; background: var(--rule); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+.data-panel .bar > i { display: block; height: 100%; background: var(--accent); }
+
+.theme-caption {
+  width: min(1180px, 96vw);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  font-size: 13px; color: #1f2a32; line-height: 1.6;
+  font-family: var(--font-body);
+}
+.theme-caption h2 { margin: 0 0 8px 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #6b7178; }
+.theme-caption .zh { font-family: var(--font-display-cn); }
+.theme-caption .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.theme-caption .tags span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; padding: 4px 10px; background: #fbf9f4; border: 1px solid #c9c5b8; border-radius: 999px; color: #6b7178; }
+</style>
+</head>
+<body>
+
+<div class="theme-bar">
+  <a href="index.html">← Gallery</a>
+  <div class="meta">
+    <span>monochrome-print · 黑白印刷</span>
+    <span>10 of 10 themes</span>
+  </div>
+  <div class="swatches" title="shell · surface · text · accent">
+    <span style="background:#e8e3d8"></span>
+    <span style="background:#fbf9f4"></span>
+    <span style="background:#0e1418"></span>
+    <span style="background:#1a3a8c"></span>
+  </div>
+</div>
+
+<div class="stage-wrap">
+  <div class="stage">
+
+    <div class="hero">
+      <div class="kicker"><span class="dot"></span><span>Vol. 1 · H1 / 2026</span></div>
+      <h1 class="hero-num">H1<span class="accent">.</span>2026</h1>
+      <h2 class="hero-headline">半年间，<br/>行业版图的静默迁移</h2>
+      <p class="hero-sub">一份关于模型、跑分与订阅机制变化的深度阅读。</p>
+    </div>
+
+    <div class="aside">
+      <div class="topics">
+        <div class="topic"><span class="num">I.</span><span class="label">模型版本演变</span><span class="note">GLM · M2 · DS V4</span></div>
+        <div class="topic"><span class="num">II.</span><span class="label">Benchmark 变化</span><span class="note">能力 · 实测</span></div>
+        <div class="topic"><span class="num">III.</span><span class="label">订阅机制调整</span><span class="note">5h · 7d · Coding</span></div>
+      </div>
+      <div class="data-panel">
+        <div class="row"><span class="k">events.log</span><span class="v accent">3</span></div>
+        <div class="row"><span class="k">GLM-5 升级</span><span class="v accent">2026-03</span></div>
+        <div class="row"><span class="k">DS V4 发布</span><span class="v accent">2026-05</span></div>
+        <div class="row"><span class="k">Coding 上线</span><span class="v accent">2026-04</span></div>
+        <div class="bar"><i style="width:72%"></i></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="theme-caption">
+  <div>
+    <h2>Description</h2>
+    <p class="zh">微暖白底 + 墨黑 serif + 单一墙墨蓝强调色。高对比印刷杂志气质。</p>
+    <h2 style="margin-top:16px">Best for</h2>
+    <div class="tags"><span>深度阅读</span><span>学术</span><span>品牌故事</span><span>文化评论</span></div>
+  </div>
+  <div>
+    <h2>Mood</h2>
+    <div class="tags"><span>light</span><span>print</span><span>minimal</span><span>serif</span><span>sophisticated</span></div>
+    <h2 style="margin-top:16px">Design knobs</h2>
+    <p style="font-family:var(--font-mono); font-size:12px; color:#6b7178; line-height:1.8">
+      hero: italic Source Serif, tabular figures<br/>
+      rule: 1px hairline solid (refined ink)<br/>
+      card: 4px tiny radius<br/>
+      surface: clean — NO pattern, NO vignette<br/>
+      motion: extra quiet, longer durations
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

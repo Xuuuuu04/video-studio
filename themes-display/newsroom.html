@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>newsroom · 报社</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  /* ─── palette ─── */
+  --shell:        #c8bca0;
+  --surface:      #f1ebd8;
+  --surface-2:    #f8f3e2;
+  --surface-3:    #ebe3cc;
+  --text:         #14110b;
+  --text-2:       #2a261a;
+  --text-mute:    #5e564a;
+  --text-faint:   #8c8473;
+  --rule:         #968e7a;
+  --accent:       #c8260d;
+  --accent-soft:  rgba(200, 38, 13, 0.10);
+  --accent-glow:  rgba(200, 38, 13, 0.30);
+
+  /* ─── fonts ─── */
+  --font-display-cn: "Noto Serif SC", "Source Han Serif SC", serif;
+  --font-display-en: "Playfair Display", "GT Sectra", "Bodoni 72", "Times New Roman", serif;
+  --font-body:       "Source Serif 4", "Source Serif Pro", "Noto Serif SC", "Times New Roman", serif;
+  --font-mono:       "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+
+  --r-card:         0;
+  --r-stage:        0;
+  --rule-w:         1px;
+  --rule-style:     solid;
+  --hero-num-font:    var(--font-display-en);
+  --hero-num-style:   italic;
+  --hero-num-weight:  400;
+  --hero-num-track:   -0.04em;
+  --stage-pad-x:   100px;
+  --stage-pad-y:   72px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: #c8bca0;
+  font-family: var(--font-body);
+  color: #2a261a;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 24px; gap: 24px;
+}
+.theme-bar {
+  width: min(1180px, 96vw);
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  font-family: var(--font-mono); color: #5e564a;
+}
+.theme-bar .meta { display: flex; gap: 16px; }
+.theme-bar .swatches { display: flex; gap: 8px; }
+.theme-bar .swatches span { width: 22px; height: 22px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08); }
+.theme-bar a { color: #2a261a; text-decoration: none; }
+.theme-bar a:hover { color: #c8260d; }
+
+.stage-wrap { width: min(1180px, 96vw); aspect-ratio: 16 / 9; position: relative; }
+.stage {
+  position: absolute; inset: 0;
+  background: var(--surface);
+  border-radius: var(--r-stage);
+  box-shadow: 0 60px 160px rgba(40,30,15,0.30), 0 0 0 1px rgba(0,0,0,0.05);
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--font-body);
+  padding: var(--stage-pad-y) var(--stage-pad-x);
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+/* paper grain (subtle) */
+.stage::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='8'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.45 0 0 0 0 0.35 0 0 0 0.10 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 320px 320px;
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 1;
+}
+.hero, .aside { position: relative; z-index: 2; }
+
+.hero { display: flex; flex-direction: column; gap: 24px; }
+.kicker {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-mute);
+}
+.kicker .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.hero-num {
+  font-family: var(--hero-num-font);
+  font-style: var(--hero-num-style);
+  font-weight: var(--hero-num-weight);
+  letter-spacing: var(--hero-num-track);
+  font-size: 184px; line-height: 0.9;
+  color: var(--accent);
+  margin: 0;
+}
+.hero-headline {
+  font-family: var(--font-display-cn); font-weight: 700;
+  font-size: 52px; line-height: 1.1; color: var(--text);
+  margin: 0; max-width: 14ch;
+}
+.hero-sub {
+  font-family: var(--font-body); font-size: 20px; line-height: 1.5;
+  color: var(--text-2); margin: 0; max-width: 34ch;
+  font-style: italic;
+}
+
+.aside { display: flex; flex-direction: column; gap: 24px; }
+.topics { display: flex; flex-direction: column; gap: 12px; }
+.topic {
+  background: var(--surface-2);
+  border: var(--rule-w) solid var(--rule);
+  border-radius: var(--r-card);
+  padding: 16px 20px;
+  display: flex; align-items: baseline; gap: 16px;
+}
+.topic .num {
+  font-family: var(--font-display-en); font-style: italic; font-weight: 700;
+  font-size: 26px; color: var(--accent); letter-spacing: 0;
+}
+.topic .label {
+  font-family: var(--font-display-cn); font-weight: 700;
+  font-size: 20px; color: var(--text);
+}
+.topic .note {
+  margin-left: auto;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-mute);
+}
+.data-panel {
+  background: var(--surface-3);
+  border: var(--rule-w) solid var(--rule);
+  border-radius: var(--r-card);
+  padding: 16px 20px;
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-2); line-height: 1.7;
+}
+.data-panel .row { display: flex; justify-content: space-between; gap: 12px; }
+.data-panel .row .k { color: var(--text-mute); }
+.data-panel .row .v { color: var(--text); }
+.data-panel .row .v.accent { color: var(--accent); font-weight: 700; }
+.data-panel .bar { height: 4px; background: var(--rule); overflow: hidden; margin-top: 6px; }
+.data-panel .bar > i { display: block; height: 100%; background: var(--accent); }
+
+.theme-caption {
+  width: min(1180px, 96vw);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  font-size: 13px; color: #2a261a; line-height: 1.6;
+  font-family: var(--font-body);
+}
+.theme-caption h2 { margin: 0 0 8px 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #5e564a; }
+.theme-caption .zh { font-family: var(--font-display-cn); }
+.theme-caption .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.theme-caption .tags span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; padding: 4px 10px; background: #f1ebd8; border: 1px solid #968e7a; border-radius: 0; color: #5e564a; }
+</style>
+</head>
+<body>
+
+<div class="theme-bar">
+  <a href="index.html">← Gallery</a>
+  <div class="meta">
+    <span>newsroom · 报社</span>
+    <span>10 of 10 themes</span>
+  </div>
+  <div class="swatches" title="shell · surface · text · accent">
+    <span style="background:#c8bca0"></span>
+    <span style="background:#f1ebd8"></span>
+    <span style="background:#14110b"></span>
+    <span style="background:#c8260d"></span>
+  </div>
+</div>
+
+<div class="stage-wrap">
+  <div class="stage">
+
+    <div class="hero">
+      <div class="kicker"><span class="dot"></span><span>特别报道 · H1 2026</span></div>
+      <h1 class="hero-num">H1</h1>
+      <h2 class="hero-headline">半年间，<br/>AI 产业版图迁移</h2>
+      <p class="hero-sub">从模型迭代到订阅机制调整，一份深度复盘报告。</p>
+    </div>
+
+    <div class="aside">
+      <div class="topics">
+        <div class="topic"><span class="num">I.</span><span class="label">模型版本演变</span><span class="note">GLM · M2 · DS V4</span></div>
+        <div class="topic"><span class="num">II.</span><span class="label">Benchmark 变化</span><span class="note">能力 · 跑分</span></div>
+        <div class="topic"><span class="num">III.</span><span class="label">订阅机制调整</span><span class="note">5h · 7d · Coding</span></div>
+      </div>
+      <div class="data-panel">
+        <div class="row"><span class="k">// 重大事件</span><span class="v accent">× 3</span></div>
+        <div class="row"><span class="k">GLM-5 升级</span><span class="v accent">2026-03</span></div>
+        <div class="row"><span class="k">DS V4 发布</span><span class="v accent">2026-05</span></div>
+        <div class="row"><span class="k">Coding 上线</span><span class="v accent">2026-04</span></div>
+        <div class="bar"><i style="width:72%"></i></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="theme-caption">
+  <div>
+    <h2>Description</h2>
+    <p class="zh">报纸奶油底 + 墨黑 serif + 报头红强调色。老派大报 / 纪录片气质。</p>
+    <h2 style="margin-top:16px">Best for</h2>
+    <div class="tags"><span>纪录片</span><span>深度评测</span><span>时事评论</span><span>AI 产品分析</span></div>
+  </div>
+  <div>
+    <h2>Mood</h2>
+    <div class="tags"><span>light</span><span>newspaper</span><span>editorial</span><span>documentary</span><span>warm</span></div>
+    <h2 style="margin-top:16px">Design knobs</h2>
+    <p style="font-family:var(--font-mono); font-size:12px; color:#5e564a; line-height:1.8">
+      hero: italic Playfair Display<br/>
+      rule: 1px hairline solid (broadsheet ink)<br/>
+      card: flat (no radius, like print)<br/>
+      surface: subtle paper grain<br/>
+      motion: quiet, longer durations
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

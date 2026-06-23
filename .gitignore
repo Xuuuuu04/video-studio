@@ -4,6 +4,12 @@
 !.claude/agents/
 .opencode/
 
+# Playwright MCP 产物
+.playwright-mcp/
+
+# 根目录临时截图（playwright 调试用，不入版本）
+/*.png
+
 # OS
 .DS_Store
 Thumbs.db
@@ -12,6 +18,8 @@ Thumbs.db
 node_modules/
 dist/
 *.tsbuildinfo
+# Vite 预打包缓存（optimizeDeps 产物，本地随时重建）
+.vite/
 
 # 音频合成产物（太大，不入库）
 **/public/audio/
